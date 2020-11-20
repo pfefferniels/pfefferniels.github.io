@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width user-scalable=no">
+    <title>Metronome</title>
+    <link rel="stylesheet" href="css/main.css">
+    <script src="//cwilso.github.io/AudioContext-MonkeyPatch/AudioContextMonkeyPatch.js"></script>
+    <script src="js/metronome.js"></script>
+  </head>
+  <body>
+    <p class="explanation">Metronom, das mittels "quantitativer Akzentuierung" einen ungleichen Dreiertakt schlägt (<code><u><b>1</b></u> 2 <u>3</u></code>)</p>
+    <div id="controls">
+      <div><a class="play" onclick="this.innerText = play();">play</a></div>
+      <div id="tempoBox">Tempo: <span id="showTempo">70</span> <input id="tempo" type="range" min="30.0" max="80.0" step="1" value="70.0" style="height: 20px; width: 200px" onInput="tempo = event.target.value; document.getElementById('showTempo').innerText=tempo;"></div>
+    </div>
+   </body>
+</html>
