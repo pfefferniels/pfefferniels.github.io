@@ -1,0 +1,48 @@
+h2 {
+  font-family: sans-serif;
+}
+
+li {
+  padding: 0.5rem !important;
+}
+
+.step:not(#scaleSlide) {
+  opacity: 0.2;
+  transition: opacity 1s;
+}
+
+.step.active {
+  opacity: 1 !important;
+}
+
+#welcome {
+  background-color: white;
+}
+
+.scaleExplanation {
+  width: 50vw;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: rgba(255, 119, 87, 0.09);
+}
+
+.demonstrationContainer {
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+}
+
+.demonstrationContainer svg {
+  width: 100%;
+  height: 100%;
+}
+
+.demonstrationContainer video {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.demonstrationComponent {
+  float: left;
+}

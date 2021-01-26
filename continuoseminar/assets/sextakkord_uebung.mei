@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://music-encoding.org/schema/4.0.0/mei-all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="https://music-encoding.org/schema/4.0.0/mei-all.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<mei xmlns="http://www.music-encoding.org/ns/mei" meiversion="4.0.0">
+   <meiHead>
+      <fileDesc>
+         <titleStmt>
+            <title></title>
+            <respStmt />
+         </titleStmt>
+         <pubStmt><availability>
+               <distributor>Copyright © </distributor>
+            </availability>
+         </pubStmt>
+      </fileDesc>
+   </meiHead>
+   <music>
+      <body>
+         <mdiv>
+            <score>
+               <scoreDef>
+                  <staffGrp>
+                     <staffDef xml:id="P1" n="1" lines="5">
+                        <clef xml:id="clef-0923099591" shape="F" line="4" />
+                        <keySig xml:id="keysig-1862691454" mode="major" sig="0" />
+                        <meterSig xml:id="msig-0520110472" count="4" unit="4" />
+                     </staffDef>
+                     <staffDef xml:id="P2" n="2" lines="5">
+                        <clef xml:id="clef-2113170148" shape="F" line="4" />
+                        <keySig xml:id="keysig-0057338525" mode="major" sig="0" />
+                        <meterSig xml:id="msig-1640510568" count="4" unit="4" />
+                     </staffDef>
+                  </staffGrp>
+               </scoreDef>
+               <section>
+                  <measure xml:id="measure-2011945816" n="1">
+                     <staff xml:id="staff-2131203349" n="2">
+                        <layer xml:id="layer-0832217754" n="1">
+                           <note xml:id="note-1952502507" dur="2" oct="3" pname="c" stem.dir="up" />
+                           <note xml:id="note-1104723464" dur="2" oct="3" pname="e" stem.dir="down" />
+                        </layer>
+                     </staff>
+                     <slur xml:id="slur-0231414987" startid="#note-1288753522" endid="#space-0322673161" curvedir="below" />
+                     <slur xml:id="slur-0903433205" startid="#note-1241074752" endid="#space-0945083132" curvedir="below" />
+                     <harm staff="2" tstamp="3">6</harm>
+                  </measure>
+                  <measure xml:id="measure-0665820703" right="dbl" n="2">
+                     <staff xml:id="staff-2080233182" n="2">
+                        <layer xml:id="layer-1879972506" n="1">
+                           <note xml:id="note-0963186143" dur="2" oct="3" pname="g" stem.dir="down" />
+                           <note xml:id="note-1931848945" dur="2" oct="3" pname="c" stem.dir="up" />
+                        </layer>
+                     </staff>
+                     <slur xml:id="slur-1850464818" startid="#note-0928033331" endid="#space-0860925877" curvedir="below" />
+                     <slur xml:id="slur-1684052888" startid="#note-0559799846" endid="#space-1234677072" curvedir="below" />
+                  </measure>
+                  <measure xml:id="measure-1964524346" n="3">
+                     <staff xml:id="staff-1492999274" n="2">
+                        <layer xml:id="layer-1895065223" n="1">
+                           <note xml:id="note-0290247523" dur="2" oct="2" pname="g" stem.dir="up" />
+                           <note xml:id="note-1388410681" dur="2" oct="2" pname="b" stem.dir="up" />
+                        </layer>
+                     </staff>
+                     <slur xml:id="slur-0524937410" startid="#note-1216246046" endid="#space-0710599551" curvedir="below" />
+                     <slur xml:id="slur-1956393426" startid="#note-2067114274" endid="#note-2017873733" curvedir="below" />
+                     <harm staff="2" tstamp="3">6</harm>
+                  </measure>
+                  <measure xml:id="measure-1037159460" right="dbl" n="4">
+                     <staff xml:id="staff-1999583786" n="2" visible="true">
+                        <layer xml:id="layer-0206044559" n="1">
+                           <note xml:id="note-1935235542" dur="2" oct="3" pname="d" stem.dir="down" />
+                           <note xml:id="note-0348149097" dur="2" oct="2" pname="g" stem.dir="up" />
+                        </layer>
+                     </staff>
+                     <slur xml:id="slur-1422699936" startid="#note-1111523151" endid="#space-2053358383" curvedir="below" />
+                     <slur xml:id="slur-1523272387" startid="#note-1929447001" endid="#note-0803169225" curvedir="below" />
+                     <harm staff="2" tstamp="1">#</harm>
+                  </measure>
+                  <measure xml:id="measure-1050543472" n="5">
+                     <staff xml:id="staff-1295178826" n="2">
+                        <layer xml:id="layer-0062060450" n="1">
+                           <note xml:id="note-1177861200" dur="2" oct="3" pname="d" stem.dir="down" />
+                           <note xml:id="note-2050593308" dur="2" oct="3" pname="f" stem.dir="down" />
+                        </layer>
+                     </staff>
+                     <slur xml:id="slur-1537510790" startid="#note-0366183774" endid="#space-2143190477" curvedir="below" />
+                     <slur xml:id="slur-1535218239" startid="#note-0210132431" endid="#space-0163763145" curvedir="below" />
+                     <harm staff="2" tstamp="3">6</harm>
+                  </measure>
+                  <measure xml:id="measure-0665286139" right="dbl" n="6">
+                     <staff xml:id="staff-0674176403" n="2">
+                        <layer xml:id="layer-1926410106" n="1">
+                           <note xml:id="note-0765916182" dur="2" oct="3" pname="a" stem.dir="down" />
+                           <note xml:id="note-0710011686" dur="2" oct="3" pname="d" stem.dir="down" />
+                        </layer>
+                     </staff>
+                     <slur xml:id="slur-1132716764" startid="#note-0741082671" endid="#space-1237103198" curvedir="below" />
+                     <slur xml:id="slur-1244576208" startid="#note-1834796930" endid="#space-2027972194" curvedir="below" />
+                     <harm staff="2" tstamp="1">#</harm>
+                  </measure>
+                  <measure xml:id="measure-0148273882" n="7">
+                     <staff xml:id="staff-1497667666" n="2" visible="true">
+                        <layer xml:id="layer-0676230614" n="1">
+                           <note xml:id="note-1398627140" dur="2" oct="2" pname="a" stem.dir="up" />
+                           <note xml:id="note-1297965575" dur="2" oct="3" pname="c" stem.dir="up" />
+                        </layer>
+                     </staff>
+                     <slur xml:id="slur-1396456656" startid="#note-0938680865" endid="#space-0678367368" curvedir="below" />
+                     <slur xml:id="slur-1910998032" startid="#note-1644528707" endid="#space-0492805799" curvedir="below" />
+                     <harm staff="2" tstamp="3">6</harm>
+                  </measure>
+                  <measure xml:id="measure-1287635336" right="dbl" n="8">
+                     <staff xml:id="staff-1645942493" n="2">
+                        <layer xml:id="layer-1083565309" n="1">
+                           <note xml:id="note-0939974517" dur="2" oct="3" pname="e" stem.dir="down" />
+                           <note xml:id="note-0060331585" dur="2" oct="2" pname="a" stem.dir="up" />
+                        </layer>
+                     </staff>
+                     <slur xml:id="slur-0197284117" startid="#note-0283729134" endid="#space-0195637236" curvedir="below" />
+                     <slur xml:id="slur-1747636462" startid="#note-0929493522" endid="#space-1571556774" curvedir="below" />
+                     <harm staff="2" tstamp="1">#</harm>
+                     <harm staff="2" tstamp="3">#</harm>
+                  </measure>
+                  <measure xml:id="measure-1448862055" n="9">
+                     <staff xml:id="staff-1156121175" n="2">
+                        <layer xml:id="layer-2088952602" n="1">
+                           <note xml:id="note-1932886579" dur="2" oct="2" pname="f" stem.dir="up" />
+                           <note xml:id="note-1638417781" dur="2" oct="2" pname="a" stem.dir="up" />
+                        </layer>
+                     </staff>
+                     <slur xml:id="slur-2132944261" startid="#note-0616759710" endid="#space-1321392202" curvedir="below" />
+                     <slur xml:id="slur-1959482701" startid="#note-1081112428" endid="#space-0087571021" curvedir="below" />
+                     <harm staff="2" tstamp="3">6</harm>
+                  </measure>
+                  <measure xml:id="measure-0093863390" right="dbl" n="10">
+                     <staff xml:id="staff-0065112156" n="2" visible="true">
+                        <layer xml:id="layer-0625378735" n="1">
+                           <note xml:id="note-0979322926" dur="2" oct="3" pname="c" stem.dir="up" />
+                           <note xml:id="note-1989965812" dur="2" oct="2" pname="f" stem.dir="up" />
+                        </layer>
+                     </staff>
+                     <slur xml:id="slur-0418022132" startid="#note-1850340605" endid="#note-0183972669" curvedir="below" />
+                     <slur xml:id="slur-0116951036" startid="#note-1047940888" endid="#space-1460207215" curvedir="below" />
+                  </measure>
+                  <measure xml:id="measure-0619446017" n="11">
+                     <staff xml:id="staff-1406267800" n="2">
+                        <layer xml:id="layer-0414335343" n="1">
+                           <note xml:id="note-2079945492" dur="2" oct="3" pname="c" stem.dir="up" />
+                           <note xml:id="note-0221914585" dur="2" oct="3" pname="e" stem.dir="down" />
+                        </layer>
+                     </staff>
+                     <slur xml:id="slur-0869808016" startid="#note-1205774303" endid="#space-1902737957" curvedir="below" />
+                     <slur xml:id="slur-1490751865" startid="#note-1977441142" endid="#space-0703417114" curvedir="below" />
+                     <harm staff="2" tstamp="3">6</harm>
+                  </measure>
+                  <measure xml:id="measure-0803166277" right="end" n="12">
+                     <staff xml:id="staff-1789636186" n="2">
+                        <layer xml:id="layer-2094582617" n="1">
+                           <note xml:id="note-1811715232" dur="2" oct="3" pname="g" stem.dir="down" />
+                           <note xml:id="note-1213853656" dur="2" oct="3" pname="c" stem.dir="up" />
+                        </layer>
+                     </staff>
+                     <slur xml:id="slur-1786660720" startid="#note-1733327177" endid="#space-0533801092" curvedir="below" />
+                     <slur xml:id="slur-1397963927" startid="#note-0148789556" endid="#space-1996064718" curvedir="below" />
+                  </measure>
+               </section>
+            </score>
+         </mdiv>
+      </body>
+   </music>
+</mei>
