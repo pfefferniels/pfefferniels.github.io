@@ -54,7 +54,6 @@
 
   .strand { stroke: var(--line); stroke-width: 1.5; fill: none; }
   .title { font-size: 15px; fill: var(--fg); }
-  .tag { font-size: 10.5px; letter-spacing: 0.08em; fill: var(--muted); }
 
   .dot { cursor: pointer; outline: none; }
   .dot circle { fill: var(--bg); stroke: var(--muted); stroke-width: 1.4; }
@@ -98,6 +97,7 @@
 const yt = id => `https://www.youtube.com/watch?v=${id}`;
 const VAN_EYCK = 'https://books.google.com/books?id=HxE8AQAAIAAJ';
 const LUSTHOF_IMSLP = 'https://imslp.org/wiki/Der_Fluyten_Lust-Hof_(Eyck,_Jacob_van)';
+const NOTEN = file => `https://pfefferniels.github.io/bearbeitungen/noten/${file}`;
 
 // A dot is one arrangement, or several by the same hand; `entries` lists them when there are several.
 const STRANDS = [
@@ -169,17 +169,16 @@ const STRANDS = [
       { title: 'Jacob van Eyck, *Amarilli mia bella* (NVE 68)', scores: [['Faksimile', `${VAN_EYCK}&pg=PA74-IA1`]] },
       { title: '*Amarilli mia bella, met 2* (NVE 84), 1649', scores: [['Faksimile', `${VAN_EYCK}&pg=PA94-IA1`]],
         recordings: [['Tabea Schwartz, Vernon Consort', yt('4eHk3OUdjus')]] }] },
-    { label: 'Kabinet', year: 1646, title: '„I. H.“, *Amarilli mia bella*, in *’t Uitnemend Kabinet* I' },
   ] },
 ];
 
 const TODAY = [
   { title: '*Passacaille d’Armide*', dots: [
     { label: 'Lully', year: 1686, source: true, title: 'Jean-Baptiste Lully, Passacaille aus *Armide*, 5. Akt',
-      scores: [['Ballard 1686, S. 220 (archive.org)', 'https://archive.org/details/armidetragedie00lull/page/n285/mode/2up'], ['Ballard 1686 (Gallica)', 'https://gallica.bnf.fr/ark:/12148/btv1b9062826k']],
+      scores: [['Ballard 1686, S. 220–231, nur die Passacaille (PDF)', NOTEN('Lully_Armide_Passacaille_Ballard-1686.pdf')]],
       recordings: [['Café Zimmermann, ab 27:08', 'https://www.youtube.com/watch?v=nvlN3ei0PyA&t=1628s'], ['Herreweghe, La Chapelle Royale, mit Gesang', yt('Hkzzm1NQ0Ck')], ['Rousset, Les Talens Lyriques, mit Gesang', yt('5t1onP11Fh8')]] },
     { label: 'd’Anglebert', year: 1689, title: 'Jean-Henry d’Anglebert, *Passacaille d’Armide*, *Pièces de clavecin*, S. 63–66',
-      scores: [['Druck 1689 (Gallica)', 'https://gallica.bnf.fr/ark:/12148/btv1b9009961w'], ['Druck 1689 (archive.org)', 'https://archive.org/details/imslp-de-clavessin-anglebert-jean-henri-d']],
+      scores: [['Druck 1689, S. 63–66, mit den *Marques des Agrémens* (PDF, Scan BnF)', NOTEN('DAnglebert_Passacaille-dArmide_1689.pdf')]],
       recordings: [['Céline Frisch', yt('vSXwPtlLAHo')], ['Christophe Rousset', yt('sKJ-fHceKUY')], ['Capriccio Stravagante, zwei Cembali, ab 4:00', 'https://www.youtube.com/watch?v=pMtDU9suGSM&t=240s']] },
     { label: 'Handschriften', year: 1705, yearLabel: 'um 1700–1710', entries: [
       { title: 'Babell-Manuskript, GB-Lbl Add. 39569, Cembalo',
@@ -188,50 +187,45 @@ const TODAY = [
       { title: 'Regensburg, D-Rtt Inc. III c/4, Tasteninstrument', scores: [['RISM', 'https://rism.online/sources/450030547']] },
       { title: 'Lord Danby’s Lute Book, US-R Vault M2.D172, S. 37, Laute' }] },
   ] },
-  { title: 'Konzerte nach Vivaldi u. a.', dots: [
-    { label: 'Albinoni', year: 1700, source: true, title: 'Tomaso Albinoni, Concerto IV G-Dur, op. 2/8, *Sinfonie e concerti a cinque*, Venedig 1700',
-      scores: [['IMSLP', 'https://imslp.org/wiki/Sinfonie_e_Concerti_a_5,_Op.2_(Albinoni,_Tomaso)']],
-      recordings: [['La Serenissima, Adagio', yt('YtoAMmHXfYA')]] },
-    { label: 'Torelli', year: 1709, source: true, title: 'Giuseppe Torelli, Konzert c-Moll op. 8/8, *Concerti grossi con una pastorale*, Bologna 1709',
-      scores: [['IMSLP', 'https://imslp.org/wiki/12_Concerti_grossi_con_una_pastorale,_Op.8_(Torelli,_Giuseppe)']],
-      recordings: [['Kammerorchester Basel, Vivace', yt('DpfJrwYdlhQ')]] },
-    { label: 'Walther', year: 1713, yearLabel: 'Weimar, 1710er', entries: [
-      { title: 'Johann Gottfried Walther, *Concerto del Sigr. Torelli, appropriato all’Organo*, a-Moll',
-        recordings: [['Simone Stella, Allegro', yt('NfmGLMT96gg')], ['Erik-Jan van der Hel', yt('-6dfeNygibw')]] },
-      { title: 'Johann Gottfried Walther, *Concerto del Sigr. Tomaso Albinoni*, F-Dur',
-        recordings: [['Simone Stella, Adagio', yt('_zu-rfF0__c')]] },
-      { title: 'Johann Gottfried Walther, *Concerto del Sigr. Meck*, h-Moll, nach Vivaldi RV 275',
-        recordings: [['Bálint Karosi', yt('fyKKHJswhHc')]] }] },
-    { label: 'Vivaldi', year: 1711, source: true, entries: [
-      { title: 'Antonio Vivaldi, Konzert D-Dur op. 3/9, RV 230',
-        scores: [['IMSLP, *L’estro armonico*', 'https://imslp.org/wiki/L%27estro_armonico%2C_Op.3_(Vivaldi%2C_Antonio)']],
-        recordings: [['Fabio Biondi, Europa Galante, Larghetto', yt('Zyrq-yIuslA')]] },
-      { title: 'Antonio Vivaldi, Konzert a-Moll für zwei Violinen op. 3/8, RV 522',
-        recordings: [['Voices of Music (Lodge, Lee)', yt('n4-VvB3om0M')], ['Tafelmusik, 1. Satz', yt('oXb-XXPJRuc')]] },
-      { title: 'Alessandro Marcello, Oboenkonzert d-Moll, gedruckt Amsterdam: Jeanne Roger, um 1716/17',
-        recordings: [['Marcel Ponseele, Il Gardellino, Adagio', yt('A0jNtvTr5AU')]] }] },
-    { label: 'Bach', year: 1715, yearLabel: 'Weimar, um 1714–17', entries: [
-      { title: 'Johann Sebastian Bach, Concerto D-Dur BWV 972 nach Vivaldi RV 230',
-        scores: [['P 280 (SBB), Scan 9–13', 'http://resolver.staatsbibliothek-berlin.de/SBB000165DE00000000'], ['Bach-digital', 'https://www.bach-digital.de/receive/BachDigitalWork_work_00001149']],
-        recordings: [['Richard Egarr, Larghetto ab 2:25', 'https://www.youtube.com/watch?v=CACAlhcmKPM&t=145s']] },
-      { title: 'Johann Sebastian Bach, Concerto d-Moll BWV 974 nach A. Marcello',
-        scores: [['P 280 (SBB), Scan 18–22', 'http://resolver.staatsbibliothek-berlin.de/SBB000165DE00000000'], ['Bach-digital', 'https://www.bach-digital.de/receive/BachDigitalWork_work_00001152']],
-        recordings: [['Benjamin Alard, Adagio', yt('i7EHBd-2RPo')], ['Patrick Ayrton, Adagio ab 3:30', 'https://www.youtube.com/watch?v=W6PzceNJom8&t=210s']] },
-      { title: 'Johann Sebastian Bach, Concerto a-Moll BWV 593 für Orgel nach Vivaldi RV 522',
-        scores: [['P 400b (SBB)', 'http://resolver.staatsbibliothek-berlin.de/SBB000102DC00000000']],
-        recordings: [['Reitze Smits', yt('Z-xvW920gqk')], ['Ton Koopman, 1. Satz', yt('iPQkEWo-Qn4')]] }] },
-    { label: 'BWV 1065', year: 1730, yearLabel: 'Leipzig, um 1730?', title: 'Johann Sebastian Bach, Concerto a-Moll für vier Cembali BWV 1065 nach Vivaldi op. 3/10, RV 580',
-      scores: [['Bach-digital', 'https://www.bach-digital.de/receive/BachDigitalWork_work_00001251']],
-      recordings: [['Netherlands Bach Society, Largo ab 4:06', 'https://www.youtube.com/watch?v=emkJ0A7IfkY&t=246s']] },
+  { title: '*Entrée d’Apollon*', dots: [
+    { label: 'Lully', year: 1681, source: true, title: 'Jean-Baptiste Lully, *Le Triomphe de l’Amour*, Entrée d’Apollon, Ballard 1681, S. 188–190',
+      scores: [['Ballard 1681, S. 188–190 (PDF)', NOTEN('Lully_Entree-d-Apollon_Ballard-1681.pdf')]],
+      recordings: [['Musica Antiqua Köln', yt('V6_iUp1_hIo')]] },
+    { label: 'd’Anglebert', year: 1689, title: 'Jean-Henry d’Anglebert, *Air d’Apollon du Triomphe de l’Amour*, *Pièces de clavecin*, S. 61–62',
+      scores: [['Druck 1689, S. 61–62 (PDF, Scan BnF)', NOTEN('DAnglebert_Air-d-Apollon_1689.pdf')]],
+      recordings: [['Christophe Rousset', yt('bKUqo47Ko7A')]] },
+    { label: 'de Visée', year: 1699, yearLabel: 'Saizenay-Ms., ab 1699', title: 'Robert de Visée, *Entrée d’Apollon*, Theorbe; Saizenay-Ms. S. 222, auch F-Pn Rés. 1106, ff. 77v–78r',
+      scores: [['F-Pn Rés. 1106, ff. 77v–78r (PDF, Scan BnF/Gallica)', NOTEN('deVisee_Entree-d-Apollon_Res1106.pdf')]],
+      recordings: [['Jakob Lindberg', yt('2V_O7LPrcUY')]] },
   ] },
-  { title: 'Corelli, op. 3, 5 und 6', dots: [
-    { label: 'op. 3', year: 1689, source: true, title: 'Arcangelo Corelli, *Sonate a tre* op. 3, Rom 1689' },
-    { label: 'op. 5', year: 1700, source: true, title: 'Arcangelo Corelli, *Sonate a violino e violone o cimbalo* op. 5, Rom 1700' },
-    { label: 'op. 6', year: 1714, source: true, title: 'Arcangelo Corelli, *Concerti grossi* op. 6, Amsterdam: Roger 1714, Ripieno „ad arbitrio“',
-      scores: [['IMSLP', 'https://imslp.org/wiki/12_Concerti_Grossi%2C_Op.6_(Corelli%2C_Arcangelo)']],
-      recordings: [['Bremer Barockorchester, op. 6/1', yt('hggs45CYBsI')]] },
-    { label: 'Geminiani', year: 1726, yearLabel: '1726/1729', title: 'Francesco Geminiani, Concerti grossi nach Corelli op. 5, London 1726 und 1729' },
-    { label: 'Geminiani', year: 1735, title: 'Francesco Geminiani, Concerti grossi nach Corelli op. 3, London: Walsh 1735' },
+  { title: '*Les Silvains*', dots: [
+    { label: 'Couperin', year: 1713, source: true, title: 'François Couperin, *Les Silvains*, *Premier livre de pièces de clavecin*, 1er ordre, S. 8–9',
+      scores: [['Druck 1713, S. 8–9 (PDF, Scan BnF/Gallica)', NOTEN('Couperin_Les-Silvains_1713.pdf')]],
+      recordings: [['Davitt Moroney', yt('l3gFPgQRH_Y')], ['Christophe Rousset', yt('EPYQfYFUAuU')]] },
+    { label: 'de Visée', year: 1716, yearLabel: 'Datum offen', title: 'Robert de Visée, *Les sylvains de Mr Couperin*, Theorbe; Saizenay-Ms., auch F-Pn Rés. 1106, ff. 42v–44r',
+      scores: [['F-Pn Rés. 1106, ff. 42v–44r (PDF, Scan BnF/Gallica)', NOTEN('deVisee_Les-Silvains_Res1106.pdf')]],
+      recordings: [['Hopkinson Smith', yt('4jREYNfNeYI')], ['Jakob Lindberg', yt('PSDrs6qfP00')]] },
+  ] },
+  { title: 'Marcello, Oboenkonzert d-Moll', dots: [
+    { label: 'Marcello', year: 1712, yearLabel: 'vor 1715 in Abschrift, gedruckt um 1716/17', source: true,
+      title: 'Alessandro Marcello, Oboenkonzert d-Moll; gedruckt in *Concerti a cinque*, Amsterdam: Jeanne Roger, um 1716/17',
+      scores: [['Oboenstimme, Roger, Adagio S. 4 (PDF)', NOTEN('Marcello_Oboenkonzert-d_Roger_Oboe.pdf')]],
+      recordings: [['Marcel Ponseele, Il Gardellino, Adagio', yt('A0jNtvTr5AU')]] },
+    { label: 'Bach', year: 1715, yearLabel: 'Weimar, um 1715', title: 'Johann Sebastian Bach, Concerto d-Moll BWV 974 nach A. Marcello',
+      scores: [['BGA 42, Adagio S. 75–76 (PDF)', NOTEN('Bach_BWV974_BGA42.pdf')], ['P 280 (SBB), Scan 18–22', 'http://resolver.staatsbibliothek-berlin.de/SBB000165DE00000000']],
+      recordings: [['Benjamin Alard, Adagio', yt('i7EHBd-2RPo')], ['Patrick Ayrton, Adagio ab 3:30', 'https://www.youtube.com/watch?v=W6PzceNJom8&t=210s']] },
+  ] },
+  { title: 'Albinoni, Concerto op. 2/8', dots: [
+    { label: 'Albinoni', year: 1700, source: true, title: 'Tomaso Albinoni, Concerto IV G-Dur, op. 2/8, *Sinfonie e concerti a cinque*, Venedig 1700',
+      scores: [['Violino primo, Sala 1700 (PDF)', NOTEN('Albinoni_op2-8_Sala1700_Violino-primo.pdf')]],
+      recordings: [['La Serenissima, Adagio', yt('YtoAMmHXfYA')]] },
+    { label: 'Walther', year: 1713, yearLabel: 'Weimar, 1710er', title: 'Johann Gottfried Walther, *Concerto del Sigr. Tomaso Albinoni*, F-Dur, Orgel',
+      scores: [['DDT 26/27, S. 285–288, Adagio S. 287 (PDF)', NOTEN('Walther_Concerto-Albinoni_DDT26-27.pdf')]],
+      recordings: [['Simone Stella, Adagio', yt('_zu-rfF0__c')]] },
+  ] },
+  { title: '*La Follia*', dots: [
+    { label: 'Corelli', year: 1700, source: true, title: 'Arcangelo Corelli, Sonate d-Moll op. 5/12, *Follia*, Rom 1700' },
+    { label: 'Geminiani', year: 1729, title: 'Francesco Geminiani, Concerto grosso d-Moll nach Corelli op. 5/12, London 1729' },
   ] },
 ];
 
@@ -332,11 +326,10 @@ function drawAxis(svg, layout) {
 }
 
 function drawStrand(svg, row, onPick) {
-  const g = svgEl('g', { class: row.today ? 'today' : '' }, svg);
+  const g = svgEl('g', {}, svg);
   const xs = row.dots.map(d => d.x);
   svgEl('line', { class: 'strand', x1: f1(Math.min(...xs)), x2: f1(Math.max(...xs)), y1: row.y, y2: row.y }, g);
-  const title = richSpans(svgEl('text', { class: 'title', x: f1(Math.min(...xs) - 5), y: row.y - 11 }, g), row.title);
-  if (row.today) svgEl('tspan', { class: 'tag', dx: 8 }, title).textContent = 'HEUTE';
+  richSpans(svgEl('text', { class: 'title', x: f1(Math.min(...xs) - 5), y: row.y - 11 }, g), row.title);
   if (row.join) svgEl('path', { class: 'strand', d: tailD(Math.max(...xs), row.y, row.join) }, g);
   row.dots.forEach(d => drawDot(g, underLine(row, d), onPick));
 }
