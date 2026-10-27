@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Bearbeitungen im Überblick</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+  /* One year axis; each Vorlage is a single hairline with a dot per arrangement. */
+  :root {
+    --bg: #ffffff;
+    --fg: #111827;
+    --muted: #6b7280;
+    --line: #d1d5db;
+    --grid: #f3f4f6;
+    --rule: #e5e7eb;
+    --shadow: rgba(17, 24, 39, 0.10);
+    --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1115; --fg: #e5e7eb; --muted: #9ca3af; --line: #3a3f48; --grid: #181b21; --rule: #2a2d34;
+      --shadow: rgba(0, 0, 0, 0.5);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1115; --fg: #e5e7eb; --muted: #9ca3af; --line: #3a3f48; --grid: #181b21; --rule: #2a2d34;
+    --shadow: rgba(0, 0, 0, 0.5);
+    color-scheme: dark;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font: 1rem/1.45 var(--serif);
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 20px;
+  }
+
+  .stage { overflow-x: auto; }
+  #chart { display: block; width: 100%; min-width: 980px; height: auto; }
+
+  .grid { stroke: var(--grid); stroke-width: 1; }
+  .axis { stroke: var(--line); stroke-width: 1; }
+  .tick { font-size: 11px; fill: var(--muted); text-anchor: middle; font-variant-numeric: tabular-nums; }
+
+  .strand { stroke: var(--line); stroke-width: 1.5; fill: none; }
+  .title { font-size: 15px; fill: var(--fg); }
+  .tag { font-size: 10.5px; letter-spacing: 0.08em; fill: var(--muted); }
+
+  .dot { cursor: pointer; outline: none; }
+  .dot circle { fill: var(--bg); stroke: var(--muted); stroke-width: 1.4; }
+  .dot.source circle { fill: var(--fg); stroke: var(--fg); }
+  .dot text { font-size: 12.5px; fill: var(--muted); }
+  .dot.source text { fill: var(--fg); }
+  .dot .hit { fill: transparent; stroke: none; }
+  .dot:hover text, .dot.selected text { fill: var(--fg); text-decoration: underline; text-underline-offset: 2px; }
+  .dot:focus-visible circle { stroke: var(--fg); stroke-width: 2.4; }
+
+  .card {
+    position: fixed; z-index: 5;
+    right: max(16px, env(safe-area-inset-right, 0px));
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    width: min(24rem, calc(100vw - 32px)); max-height: min(70vh, 34rem); overflow: auto;
+    background: var(--bg); color: var(--fg);
+    border: 1px solid var(--rule); border-radius: 8px; box-shadow: 0 10px 28px var(--shadow);
+    padding: 0.9rem 1rem 1rem; display: grid; gap: 0.7rem;
+  }
+  .card[hidden] { display: none; }
+  .card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+  .card h2 { margin: 0; font: 600 1.05rem/1.3 var(--serif); text-wrap: balance; }
+  .card .year { color: var(--muted); font-weight: 400; font-variant-numeric: tabular-nums; }
+  .entry { display: grid; gap: 0.25rem; }
+  .entry p { margin: 0; font-size: 0.95rem; }
+  .entry ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.15rem; font-size: 0.9rem; }
+  .entry .kind { color: var(--muted); }
+  .entry .empty { color: var(--muted); font-size: 0.9rem; }
+  .card a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 0.18em; }
+  .card a:hover { text-decoration-color: var(--fg); }
+  .card a:focus-visible, .close:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+  .close { all: unset; cursor: pointer; font: 1.3rem/1 var(--serif); color: var(--muted); padding: 0 0.2rem; }
+  .close:hover { color: var(--fg); }
+  @media (max-width: 34rem) { .card { left: max(16px, env(safe-area-inset-left, 0px)); width: auto; } }
+</style>
+
+<div class="stage"><svg id="chart" role="img" aria-label="Zeitleiste der besprochenen Vorlagen und ihrer Bearbeitungen"></svg></div>
+<aside class="card" id="card" hidden aria-live="polite"></aside>
+
+<script>
+const yt = id => `https://www.youtube.com/watch?v=${id}`;
+const VAN_EYCK = 'https://books.google.com/books?id=HxE8AQAAIAAJ';
+const LUSTHOF_IMSLP = 'https://imslp.org/wiki/Der_Fluyten_Lust-Hof_(Eyck,_Jacob_van)';
+
+// A dot is one arrangement, or several by the same hand; `entries` lists them when there are several.
+const STRANDS = [
+  { title: '*Mille regretz*', dots: [
+    { label: 'Josquin?', year: 1533, source: true, entries: [
+      { title: '*Mille regretz*, Chanson à 4; bei Attaingnant 1533 mit „J. Lemaire“, Josquin zugeschrieben erst bei Susato 1549',
+        scores: [['IMSLP', 'https://imslp.org/wiki/Mille_regretz_(Josquin_Desprez)']],
+        recordings: [['Profeti della Quinta', yt('dkfVzCZ68_Q')]] },
+      { title: 'Eigene Intavolierungen und Diminutionen im Seminar' }] },
+    { label: 'Narváez', year: 1538, title: 'Luis de Narváez, *La canción del Emperador*, *Los seys libros del Delphín*, Valladolid 1538, Vihuela',
+      recordings: [['Stefan Gerritsen', yt('YrTEvbQ8hY4')]] },
+  ] },
+  { title: '*Doulce memoire*', dots: [
+    { label: 'Sandrin', year: 1538, source: true, title: 'Pierre Sandrin, *Doulce memoire*',
+      scores: [['CPDL', 'https://www.cpdl.org/wiki/index.php/Doulce_memoire_(Pierre_Sandrin)']],
+      recordings: [['Ensemble Clément Janequin', yt('DRRxOLDKPrk')], ['Doron Schleifer, Corina Marti', yt('EsIBMoksm1g')], ['Giovanna Baviera', yt('eFNjGp-Uipc')]] },
+    { label: 'Ortiz', year: 1553, title: 'Diego Ortiz, *Recercadas* I–IV über *Doulce memoire*',
+      recordings: [['Jordi Savall, Recercada I', yt('zJvWBRrREtU')], ['Jordi Savall, Recercada II', yt('dUddBc2sPTY')], ['Jordi Savall, Recercada IV', yt('210l-2Nfn88')]] },
+    { label: 'Bonizzi', year: 1626, title: 'Vincenzo Bonizzi, *Dolce me moy*, Viola bastarda',
+      scores: [['IMSLP', 'https://imslp.org/wiki/Doulce_memoire_(Bonizzi,_Vincenzo)']],
+      recordings: [['Stephen Moran, Josef Laming', yt('gbnoZkK0Hyg')]] },
+  ] },
+  { title: '*Ancor che col partire*', dots: [
+    { label: 'Rore', year: 1547, source: true, title: 'Cipriano de Rore, *Ancor che col partire*' },
+    { label: 'Ammerbach', year: 1583, title: 'Elias Nikolaus Ammerbach, *Anchor che col partier*, Orgel' },
+    { label: 'Bassano', year: 1591, entries: [
+      { title: 'Giovanni Bassano, *Ancor che col partire*, Canto diminuito' },
+      { title: 'Giovanni Bassano, *Ancor che col partire*, Basso diminuito' }] },
+    { label: 'Bovicelli', year: 1594, entries: [
+      { title: 'Giovanni Battista Bovicelli, *Ancor che col partire*' },
+      { title: 'Giovanni Battista Bovicelli, *Angelus ad pastores*, Kontrafaktur über Rores Satz' }] },
+  ] },
+  { rows: [
+    { title: '*Lachrimae*', dots: [
+      { label: 'Dowland', year: 1596, source: true, title: 'John Dowland, *Lachrimae*, Pavane für Laute' },
+      { label: '*Flow my teares*', year: 1600, title: 'John Dowland, *Flow my teares*, Lied' },
+      { label: '*Lachrimae Antiquae*', year: 1604, title: 'John Dowland, *Lachrimae Antiquae*, Consort' },
+    ] },
+    { title: '*Can she excuse*', dots: [
+      { label: 'Dowland', year: 1597, source: true, title: 'John Dowland, *Can shee excuse my wrongs*' },
+      { label: '*Essex Galiard*', year: 1604, title: 'John Dowland, *The Earle of Essex Galiard*, Consort' },
+      { label: 'Robinson', year: 1609, title: 'Thomas Robinson, *New Citharen Lessons*, Cister' },
+    ] },
+    { title: '*Come again*', dots: [
+      { label: 'Dowland', year: 1597, source: true, title: 'John Dowland, *Come againe: sweet love doth now invite*' },
+    ] },
+  ], join: { label: 'van Eyck', year: 1644, yearLabel: '1644–49', entries: [
+    { title: 'Jacob van Eyck, *Pavaen Lachrymæ* (NVE 8)', scores: [['Faksimile', `${VAN_EYCK}&pg=PA12`], ['IMSLP', LUSTHOF_IMSLP]] },
+    { title: 'Jacob van Eyck, *Pavane Lacryme* (NVE 59)', scores: [['Faksimile', `${VAN_EYCK}&pg=PA62-IA1`], ['IMSLP', LUSTHOF_IMSLP]] },
+    { title: 'Jacob van Eyck, *Excusemoy* (NVE 111), 1646', scores: [['Faksimile', `${VAN_EYCK}&pg=RA1-PA30`], ['IMSLP', LUSTHOF_IMSLP]] },
+    { title: 'Jacob van Eyck, *Comagain* (NVE 33)', scores: [['IMSLP', LUSTHOF_IMSLP]] }] } },
+  { title: '*Amarilli mia bella*', dots: [
+    { label: 'à 6', year: 1601, source: true, title: '*Amarilli mia bella* à 6, in *Ghirlanda di madrigali*, Antwerpen 1601' },
+    { label: 'Caccini', year: 1602, source: true, title: 'Giulio Caccini, *Amarilli mia bella*, *Le nuove musiche*',
+      scores: [['Digitalisat (BSB)', 'https://www.digitale-sammlungen.de/view/bsb00094281']],
+      recordings: [['Jakub Józef Orliński', yt('bHVXUNtCcfk')], ['Tabea Schwartz', yt('ObL47bxqtYo')]] },
+    { label: 'R. Dowland', year: 1610, title: 'Robert Dowland, *A Musicall Banquet*, Nr. XIX',
+      scores: [['Digitalisat (archive.org)', 'https://archive.org/details/bim_early-english-books-1475-1640_a-musicall-banquet-furn_dowland-robert_1610']] },
+    { label: 'Egerton 2971', year: 1620, yearLabel: '1610er/20er', title: '*Amarilli*, GB-Lbl Egerton 2971, verzierte Gesangslinie',
+      recordings: [['Nigel Rogers, Jordi Savall', yt('Pf11pRLQ3VI')]] },
+    { label: 'Nauwach', year: 1623, title: 'Johann Nauwach, *Amarilli mia bella*, *Arie passeggiate*',
+      scores: [['Digitalisat (BSB)', 'https://www.digitale-sammlungen.de/view/bsb00064541']],
+      recordings: [['Emma Kirkby, Anthony Rooley', yt('2kAyb4ri17Y')]] },
+    { label: '*Livre septième*', year: 1644, title: '*Amarilli mijn schoone*, in *Livre septième*, Amsterdam 1644',
+      scores: [['Google Books', 'https://books.google.com/books?id=nJw5AQAAIAAJ']],
+      recordings: [['Tabea Schwartz, Vernon Consort (Zuordnung vermutet)', yt('hokJbkegYMA')]] },
+    { label: 'van Eyck', year: 1644, yearLabel: '1644/49', entries: [
+      { title: 'Jacob van Eyck, *Amarilli mia Bella* (NVE 36)', scores: [['Faksimile', `${VAN_EYCK}&pg=PA42-IA1`]] },
+      { title: 'Jacob van Eyck, *Amarilli mia bella* (NVE 68)', scores: [['Faksimile', `${VAN_EYCK}&pg=PA74-IA1`]] },
+      { title: '*Amarilli mia bella, met 2* (NVE 84), 1649', scores: [['Faksimile', `${VAN_EYCK}&pg=PA94-IA1`]],
+        recordings: [['Tabea Schwartz, Vernon Consort', yt('4eHk3OUdjus')]] }] },
+    { label: 'Kabinet', year: 1646, title: '„I. H.“, *Amarilli mia bella*, in *’t Uitnemend Kabinet* I' },
+  ] },
+];
+
+const TODAY = [
+  { title: '*Passacaille d’Armide*', dots: [
+    { label: 'Lully', year: 1686, source: true, title: 'Jean-Baptiste Lully, Passacaille aus *Armide*, 5. Akt',
+      scores: [['Ballard 1686, S. 220 (archive.org)', 'https://archive.org/details/armidetragedie00lull/page/n285/mode/2up'], ['Ballard 1686 (Gallica)', 'https://gallica.bnf.fr/ark:/12148/btv1b9062826k']],
+      recordings: [['Café Zimmermann, ab 27:08', 'https://www.youtube.com/watch?v=nvlN3ei0PyA&t=1628s'], ['Herreweghe, La Chapelle Royale, mit Gesang', yt('Hkzzm1NQ0Ck')], ['Rousset, Les Talens Lyriques, mit Gesang', yt('5t1onP11Fh8')]] },
+    { label: 'd’Anglebert', year: 1689, title: 'Jean-Henry d’Anglebert, *Passacaille d’Armide*, *Pièces de clavecin*, S. 63–66',
+      scores: [['Druck 1689 (Gallica)', 'https://gallica.bnf.fr/ark:/12148/btv1b9009961w'], ['Druck 1689 (archive.org)', 'https://archive.org/details/imslp-de-clavessin-anglebert-jean-henri-d']],
+      recordings: [['Céline Frisch', yt('vSXwPtlLAHo')], ['Christophe Rousset', yt('sKJ-fHceKUY')], ['Capriccio Stravagante, zwei Cembali, ab 4:00', 'https://www.youtube.com/watch?v=pMtDU9suGSM&t=240s']] },
+    { label: 'Handschriften', year: 1705, yearLabel: 'um 1700–1710', entries: [
+      { title: 'Babell-Manuskript, GB-Lbl Add. 39569, Cembalo',
+        scores: [['Ausgabe Chung, MSCM 1.115 (PDF)', 'https://www.sscm-wlscm.org/images/WLSCM_Catalogue/MSCM_I/Passacaille_dArmide_LWV_71_61_MSCM1_115.pdf']] },
+      { title: '„Clavir Buch“, Schwerin, D-SWl Mus. Hs. 619, ff. 57r–59r', scores: [['RISM', 'https://rism.online/sources/240006907']] },
+      { title: 'Regensburg, D-Rtt Inc. III c/4, Tasteninstrument', scores: [['RISM', 'https://rism.online/sources/450030547']] },
+      { title: 'Lord Danby’s Lute Book, US-R Vault M2.D172, S. 37, Laute' }] },
+  ] },
+  { title: 'Konzerte nach Vivaldi u. a.', dots: [
+    { label: 'Albinoni', year: 1700, source: true, title: 'Tomaso Albinoni, Concerto IV G-Dur, op. 2/8, *Sinfonie e concerti a cinque*, Venedig 1700',
+      scores: [['IMSLP', 'https://imslp.org/wiki/Sinfonie_e_Concerti_a_5,_Op.2_(Albinoni,_Tomaso)']],
+      recordings: [['La Serenissima, Adagio', yt('YtoAMmHXfYA')]] },
+    { label: 'Torelli', year: 1709, source: true, title: 'Giuseppe Torelli, Konzert c-Moll op. 8/8, *Concerti grossi con una pastorale*, Bologna 1709',
+      scores: [['IMSLP', 'https://imslp.org/wiki/12_Concerti_grossi_con_una_pastorale,_Op.8_(Torelli,_Giuseppe)']],
+      recordings: [['Kammerorchester Basel, Vivace', yt('DpfJrwYdlhQ')]] },
+    { label: 'Walther', year: 1713, yearLabel: 'Weimar, 1710er', entries: [
+      { title: 'Johann Gottfried Walther, *Concerto del Sigr. Torelli, appropriato all’Organo*, a-Moll',
+        recordings: [['Simone Stella, Allegro', yt('NfmGLMT96gg')], ['Erik-Jan van der Hel', yt('-6dfeNygibw')]] },
+      { title: 'Johann Gottfried Walther, *Concerto del Sigr. Tomaso Albinoni*, F-Dur',
+        recordings: [['Simone Stella, Adagio', yt('_zu-rfF0__c')]] },
+      { title: 'Johann Gottfried Walther, *Concerto del Sigr. Meck*, h-Moll, nach Vivaldi RV 275',
+        recordings: [['Bálint Karosi', yt('fyKKHJswhHc')]] }] },
+    { label: 'Vivaldi', year: 1711, source: true, entries: [
+      { title: 'Antonio Vivaldi, Konzert D-Dur op. 3/9, RV 230',
+        scores: [['IMSLP, *L’estro armonico*', 'https://imslp.org/wiki/L%27estro_armonico%2C_Op.3_(Vivaldi%2C_Antonio)']],
+        recordings: [['Fabio Biondi, Europa Galante, Larghetto', yt('Zyrq-yIuslA')]] },
+      { title: 'Antonio Vivaldi, Konzert a-Moll für zwei Violinen op. 3/8, RV 522',
+        recordings: [['Voices of Music (Lodge, Lee)', yt('n4-VvB3om0M')], ['Tafelmusik, 1. Satz', yt('oXb-XXPJRuc')]] },
+      { title: 'Alessandro Marcello, Oboenkonzert d-Moll, gedruckt Amsterdam: Jeanne Roger, um 1716/17',
+        recordings: [['Marcel Ponseele, Il Gardellino, Adagio', yt('A0jNtvTr5AU')]] }] },
+    { label: 'Bach', year: 1715, yearLabel: 'Weimar, um 1714–17', entries: [
+      { title: 'Johann Sebastian Bach, Concerto D-Dur BWV 972 nach Vivaldi RV 230',
+        scores: [['P 280 (SBB), Scan 9–13', 'http://resolver.staatsbibliothek-berlin.de/SBB000165DE00000000'], ['Bach-digital', 'https://www.bach-digital.de/receive/BachDigitalWork_work_00001149']],
+        recordings: [['Richard Egarr, Larghetto ab 2:25', 'https://www.youtube.com/watch?v=CACAlhcmKPM&t=145s']] },
+      { title: 'Johann Sebastian Bach, Concerto d-Moll BWV 974 nach A. Marcello',
+        scores: [['P 280 (SBB), Scan 18–22', 'http://resolver.staatsbibliothek-berlin.de/SBB000165DE00000000'], ['Bach-digital', 'https://www.bach-digital.de/receive/BachDigitalWork_work_00001152']],
+        recordings: [['Benjamin Alard, Adagio', yt('i7EHBd-2RPo')], ['Patrick Ayrton, Adagio ab 3:30', 'https://www.youtube.com/watch?v=W6PzceNJom8&t=210s']] },
+      { title: 'Johann Sebastian Bach, Concerto a-Moll BWV 593 für Orgel nach Vivaldi RV 522',
+        scores: [['P 400b (SBB)', 'http://resolver.staatsbibliothek-berlin.de/SBB000102DC00000000']],
+        recordings: [['Reitze Smits', yt('Z-xvW920gqk')], ['Ton Koopman, 1. Satz', yt('iPQkEWo-Qn4')]] }] },
+    { label: 'BWV 1065', year: 1730, yearLabel: 'Leipzig, um 1730?', title: 'Johann Sebastian Bach, Concerto a-Moll für vier Cembali BWV 1065 nach Vivaldi op. 3/10, RV 580',
+      scores: [['Bach-digital', 'https://www.bach-digital.de/receive/BachDigitalWork_work_00001251']],
+      recordings: [['Netherlands Bach Society, Largo ab 4:06', 'https://www.youtube.com/watch?v=emkJ0A7IfkY&t=246s']] },
+  ] },
+  { title: 'Corelli, op. 3, 5 und 6', dots: [
+    { label: 'op. 3', year: 1689, source: true, title: 'Arcangelo Corelli, *Sonate a tre* op. 3, Rom 1689' },
+    { label: 'op. 5', year: 1700, source: true, title: 'Arcangelo Corelli, *Sonate a violino e violone o cimbalo* op. 5, Rom 1700' },
+    { label: 'op. 6', year: 1714, source: true, title: 'Arcangelo Corelli, *Concerti grossi* op. 6, Amsterdam: Roger 1714, Ripieno „ad arbitrio“',
+      scores: [['IMSLP', 'https://imslp.org/wiki/12_Concerti_Grossi%2C_Op.6_(Corelli%2C_Arcangelo)']],
+      recordings: [['Bremer Barockorchester, op. 6/1', yt('hggs45CYBsI')]] },
+    { label: 'Geminiani', year: 1726, yearLabel: '1726/1729', title: 'Francesco Geminiani, Concerti grossi nach Corelli op. 5, London 1726 und 1729' },
+    { label: 'Geminiani', year: 1735, title: 'Francesco Geminiani, Concerti grossi nach Corelli op. 3, London: Walsh 1735' },
+  ] },
+];
+
+/* ---------- axis: 1600–1650 and 1680–1730 get more room, the empty decades between them almost none ---------- */
+
+const AXIS = { rates: [[1530, 5], [1600, 8.5], [1652, 1.1], [1678, 8.5]], end: 1738 };
+const DECADES = [...range(13).map(k => 1530 + k * 10), ...range(6).map(k => 1680 + k * 10)];
+const GEO = { left: 22, top: 30, titleH: 24, labelDy: 18, tierH: 15, rowGap: 16, groupGap: 22, gap: 9 };
+
+function range(n) { return Array.from({ length: n }, (_, i) => i); }
+const xOfYear = y => GEO.left + AXIS.rates.reduce((x, [from, px], k) =>
+  x + Math.max(0, Math.min(y, AXIS.rates[k + 1]?.[0] ?? Infinity) - from) * px, 0);
+
+/* ---------- text ---------- */
+
+const escapeHtml = s => s.replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+const segments = s => s.split('*').map((t, k) => ({ t, italic: k % 2 === 1 })).filter(x => x.t);
+const richText = s => segments(s).map(x => x.italic ? `<i>${escapeHtml(x.t)}</i>` : escapeHtml(x.t)).join('');
+const plainText = s => s.replaceAll('*', '');
+
+async function labelMeasure() {
+  await Promise.all(['12.5px "Source Serif 4"', 'italic 12.5px "Source Serif 4"'].map(f => document.fonts.load(f).catch(() => null)));
+  const ctx = document.createElement('canvas').getContext('2d');
+  return s => segments(s).reduce((w, x) => {
+    ctx.font = `${x.italic ? 'italic ' : ''}12.5px "Source Serif 4", Georgia, serif`;
+    return w + ctx.measureText(x.t).width;
+  }, 0);
+}
+
+/* ---------- layout ---------- */
+
+// Each label takes the highest tier below its line where it clears the labels already there.
+function assignTiers(dots) {
+  return dots.reduce(({ ends, placed }, d) => {
+    const free = ends.findIndex(end => end + GEO.gap <= d.x - d.w / 2);
+    const tier = free === -1 ? ends.length : free;
+    return { ends: ends.map((e, k) => k === tier ? d.x + d.w / 2 : e).concat(tier === ends.length ? [d.x + d.w / 2] : []),
+      placed: [...placed, { ...d, tier }] };
+  }, { ends: [], placed: [] }).placed;
+}
+
+function layoutStrand(strand, top, measure, today) {
+  const dots = assignTiers(strand.dots
+    .map(d => ({ ...d, x: xOfYear(d.year), w: measure(d.label) }))
+    .sort((a, b) => a.x - b.x));
+  const tiers = Math.max(...dots.map(d => d.tier)) + 1;
+  return { ...strand, today, y: top + GEO.titleH, dots, bottom: top + GEO.titleH + GEO.labelDy + (tiers - 1) * GEO.tierH + GEO.rowGap };
+}
+
+// A group's strands run on into one shared arrangement, placed midway between its first and last line.
+function layoutGroup(group, top, measure, today) {
+  const rows = group.rows.reduce((done, s) =>
+    [...done, layoutStrand(s, done.at(-1)?.bottom ?? top, measure, today)], []);
+  const join = { ...group.join, x: xOfYear(group.join.year), y: (rows[0].y + rows.at(-1).y) / 2, w: measure(group.join.label) };
+  return rows.map(row => ({ ...row, join }));
+}
+
+const layoutItem = (item, top, measure, today) =>
+  item.rows ? layoutGroup(item, top, measure, today) : [layoutStrand(item, top, measure, today)];
+
+function layoutAll(measure) {
+  const stack = (items, start, today) => items.reduce((done, item) =>
+    [...done, ...layoutItem(item, done.at(-1)?.bottom ?? start, measure, today)], []);
+  const past = stack(STRANDS, GEO.top, false);
+  const today = stack(TODAY, past.at(-1).bottom + GEO.groupGap, true);
+  const rows = [...past, ...today];
+  const labelEnds = rows.flatMap(r => r.dots.map(d => d.x + d.w / 2 + GEO.left));
+  return { rows, joins: [...new Set(rows.map(r => r.join).filter(Boolean))],
+    width: Math.max(xOfYear(AXIS.end), ...labelEnds), height: today.at(-1).bottom };
+}
+
+/* ---------- rendering ---------- */
+
+const SVG_NS = 'http://www.w3.org/2000/svg';
+function svgEl(tag, attrs, parent) {
+  const el = document.createElementNS(SVG_NS, tag);
+  Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+  parent?.appendChild(el);
+  return el;
+}
+function richSpans(text, s) {
+  segments(s).forEach(x => { svgEl('tspan', x.italic ? { 'font-style': 'italic' } : {}, text).textContent = x.t; });
+  return text;
+}
+const f1 = v => v.toFixed(1);
+const yearOf = d => d.yearLabel ?? String(d.year);
+const entriesOf = d => d.entries ?? [d];
+
+function drawAxis(svg, layout) {
+  const g = svgEl('g', { 'aria-hidden': 'true' }, svg);
+  DECADES.forEach(year => {
+    const x = f1(xOfYear(year));
+    svgEl('line', { class: 'grid', x1: x, x2: x, y1: GEO.top - 6, y2: layout.height }, g);
+    svgEl('text', { class: 'tick', x, y: GEO.top - 12 }, g).textContent = year;
+  });
+  [[1530, 1652], [1678, AXIS.end - 4]].forEach(([a, b]) =>
+    svgEl('line', { class: 'axis', x1: f1(xOfYear(a)), x2: f1(xOfYear(b)), y1: GEO.top - 6, y2: GEO.top - 6 }, g));
+}
+
+function drawStrand(svg, row, onPick) {
+  const g = svgEl('g', { class: row.today ? 'today' : '' }, svg);
+  const xs = row.dots.map(d => d.x);
+  svgEl('line', { class: 'strand', x1: f1(Math.min(...xs)), x2: f1(Math.max(...xs)), y1: row.y, y2: row.y }, g);
+  const title = richSpans(svgEl('text', { class: 'title', x: f1(Math.min(...xs) - 5), y: row.y - 11 }, g), row.title);
+  if (row.today) svgEl('tspan', { class: 'tag', dx: 8 }, title).textContent = 'HEUTE';
+  if (row.join) svgEl('path', { class: 'strand', d: tailD(Math.max(...xs), row.y, row.join) }, g);
+  row.dots.forEach(d => drawDot(g, underLine(row, d), onPick));
+}
+
+const tailD = (x, y, j) =>
+  `M${f1(x)},${f1(y)} H${f1(j.x - 46)} C${f1(j.x - 20)},${f1(y)} ${f1(j.x - 20)},${f1(j.y)} ${f1(j.x)},${f1(j.y)}`;
+
+// A label hangs centred under its dot; a shared arrangement carries its label to the right.
+const underLine = (row, d) => ({ ...d, cy: row.y, lx: d.x, ly: row.y + GEO.labelDy + d.tier * GEO.tierH, anchor: 'middle' });
+const besideDot = j => ({ ...j, cy: j.y, lx: j.x + 9, ly: j.y + 4, anchor: 'start' });
+
+function drawDot(parent, d, onPick) {
+  const g = svgEl('g', { class: `dot${d.source ? ' source' : ''}`, tabindex: 0, role: 'button',
+    'aria-label': `${plainText(d.label)}, ${yearOf(d)}` }, parent);
+  const x1 = d.anchor === 'start' ? d.x - 7 : d.lx - d.w / 2 - 3;
+  const x2 = d.anchor === 'start' ? d.lx + d.w + 3 : d.lx + d.w / 2 + 3;
+  const y1 = Math.min(d.cy - 7, d.ly - 13), y2 = Math.max(d.cy + 7, d.ly + 4);
+  svgEl('rect', { class: 'hit', x: f1(x1), y: f1(y1), width: f1(x2 - x1), height: f1(y2 - y1) }, g);
+  svgEl('circle', { cx: f1(d.x), cy: f1(d.cy), r: d.source ? 4.2 : 3.6 }, g);
+  richSpans(svgEl('text', { x: f1(d.lx), y: f1(d.ly), 'text-anchor': d.anchor }, g), d.label);
+  svgEl('title', {}, g).textContent = `${plainText(d.label)}, ${yearOf(d)}`;
+  g.addEventListener('click', () => onPick(d, g));
+  g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onPick(d, g); } });
+}
+
+function render(layout, onPick) {
+  const svg = document.getElementById('chart');
+  svg.replaceChildren();
+  svg.setAttribute('viewBox', `0 0 ${f1(layout.width)} ${f1(layout.height)}`);
+  drawAxis(svg, layout);
+  layout.rows.forEach(row => drawStrand(svg, row, onPick));
+  layout.joins.forEach(j => drawDot(svg, besideDot(j), onPick));
+}
+
+/* ---------- card: only the music and the recordings ---------- */
+
+function entryHtml(e) {
+  const links = [...(e.scores ?? []).map(l => ['Noten', ...l]), ...(e.recordings ?? []).map(l => ['Aufnahme', ...l])];
+  const list = links.length
+    ? `<ul>${links.map(([kind, label, href]) => `<li><span class="kind">${kind} · </span><a href="${escapeHtml(href)}" target="_blank" rel="noopener">${richText(label)}</a></li>`).join('')}</ul>`
+    : '<span class="empty">keine Links</span>';
+  return `<div class="entry"><p>${richText(e.title)}</p>${list}</div>`;
+}
+
+function cardHtml(d) {
+  return `<div class="card-head"><h2>${richText(d.label)} <span class="year">${escapeHtml(yearOf(d))}</span></h2>
+    <button class="close" id="card-close" aria-label="Schließen">×</button></div>
+    ${entriesOf(d).map(entryHtml).join('')}`;
+}
+
+function bindCard() {
+  const card = document.getElementById('card');
+  const close = () => {
+    card.hidden = true;
+    document.querySelectorAll('.dot.selected').forEach(el => el.classList.remove('selected'));
+  };
+  card.addEventListener('click', e => { if (e.target.closest('#card-close')) close(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  return (d, el) => {
+    document.querySelectorAll('.dot.selected').forEach(x => x.classList.remove('selected'));
+    el.classList.add('selected');
+    card.innerHTML = cardHtml(d);
+    card.hidden = false;
+  };
+}
+
+async function start() {
+  const measure = await labelMeasure();
+  render(layoutAll(measure), bindCard());
+}
+start();
+</script>
+
+</body>
+</html>
