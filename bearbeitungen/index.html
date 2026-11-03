@@ -170,9 +170,6 @@ const STRANDS = [
       { title: '*Amarilli mia bella, met 2* (NVE 84), 1649', scores: [['Faksimile', `${VAN_EYCK}&pg=PA94-IA1`]],
         recordings: [['Tabea Schwartz, Vernon Consort', yt('4eHk3OUdjus')]] }] },
   ] },
-];
-
-const TODAY = [
   { title: '*Passacaille d’Armide*', dots: [
     { label: 'Lully', year: 1686, source: true, title: 'Jean-Baptiste Lully, Passacaille aus *Armide*, 5. Akt',
       scores: [['Ballard 1686, S. 220–231, nur die Passacaille (PDF)', NOTEN('Lully_Armide_Passacaille_Ballard-1686.pdf')]],
@@ -208,10 +205,68 @@ const TODAY = [
       scores: [['F-Pn Rés. 1106, ff. 42v–44r (PDF, Scan BnF/Gallica)', NOTEN('deVisee_Les-Silvains_Res1106.pdf')]],
       recordings: [['Hopkinson Smith', yt('4jREYNfNeYI')], ['Jakob Lindberg', yt('PSDrs6qfP00')]] },
   ] },
+  { title: '*Ich danke dem Herrn*', dots: [
+    { label: 'Schütz', year: 1619, source: true, title: 'Heinrich Schütz, *Ich danke dem Herrn* SWV 34, *Psalmen Davids*, Dresden 1619, mehrchörig',
+      recordings: [['Cantus Cölln', yt('z6zdI22iqgU')]] },
+    { label: 'Schütz', year: 1636, source: true, title: 'Heinrich Schütz, *Ich danke dem Herrn* SWV 284, *Kleine geistliche Concerte* I, Leipzig 1636, Alt und Orgel',
+      scores: [['Orgelstimme 1636 (PDF)', NOTEN('Schuetz_1636_SWV284_Organum.pdf')], ['Widmung 1636 (PDF)', NOTEN('Schuetz_1636_Widmung.pdf')]],
+      recordings: [['Weser-Renaissance Bremen', yt('Q8DZ288EJ8w')]] },
+  ] },
+  { title: '*Wie’s Gott gefällt*', dots: [
+    { label: 'Scheidt', year: 1631, source: true, title: 'Samuel Scheidt, *Wie’s Gott gefällt*, *Geistliche Concerten* I, 1631, wenige Stimmen; 1634 nennt Scheidt Fassungen „mit vielen Stimmen“',
+      scores: [['Scheidts Notiz 1634, bei Lauterwasser 2017 (PDF)', NOTEN('Scheidt_1634_Notiz.pdf')]],
+      recordings: [['La Capella Ducale, Musica Fiata, große Fassung rekonstruiert von Roland Wilson', yt('KFghXC-zaHM')]] },
+  ] },
+];
+
+const TODAY = [
+  { rows: [
+    { title: '*Le Moutier*', dots: [
+      { label: 'Chambonnières', year: 1650, yearLabel: 'vor 1661', source: true, title: 'Jacques Champion de Chambonnières, Allemande *Le Moutier*, C-Dur; Bauyn-Hs., F-Pn Rés. Vm7 674, fol. 1r',
+        scores: [['Bauyn-Hs., Allemande und Double (PDF, Scan BnF)', NOTEN('Bauyn_Chambonnieres_Le-Moutier_Double-Couperin.pdf')]] },
+    ] },
+    { title: 'Gavotte a-Moll', dots: [
+      { label: 'Hardel', year: 1650, yearLabel: 'vor 1661', source: true, title: 'Jacques Hardel, Gavotte a-Moll; Bauyn-Hs., 3. Teil, fol. 38r',
+        scores: [['Bauyn-Hs., Gavotte und Double (PDF, Scan BnF)', NOTEN('Bauyn_Hardel_Gavotte_Double-Couperin.pdf')]] },
+    ] },
+    { title: 'Gavotte C-Dur', dots: [
+      { label: 'Lebègue', year: 1650, yearLabel: 'vor 1661', source: true, title: 'Nicolas Lebègue, Gavotte C-Dur; Bauyn-Hs., 3. Teil, fol. 40r',
+        scores: [['Bauyn-Hs., Gavotte und Double auf einer Seite (PDF, Scan BnF)', NOTEN('Bauyn_Lebegue_Gavotte_Double-Couperin.pdf')]] },
+    ] },
+  ], join: { label: 'L. Couperin, Doubles', year: 1661, yearLabel: 'vor 1661', entries: [
+    { title: 'Louis Couperin, „Double du Moutier par M.r Couperin“, Bauyn-Hs., F-Pn Rés. Vm7 674, fol. 1v',
+      scores: [['Allemande und Double (PDF, Scan BnF)', NOTEN('Bauyn_Chambonnieres_Le-Moutier_Double-Couperin.pdf')]],
+      recordings: [['Christophe Rousset', yt('uO80kTW7zmY')], ['Richard Egarr', yt('bLvyEf7ijkA')]] },
+    { title: 'Louis Couperin, „Par M.r Couperin. Double … cy dessus“ zu Hardels Gavotte, Bauyn-Hs., 3. Teil, fol. 38v',
+      scores: [['Gavotte und Double (PDF, Scan BnF)', NOTEN('Bauyn_Hardel_Gavotte_Double-Couperin.pdf')]],
+      recordings: [['Blandine Verlet', yt('aXXK6KRgjtc')]] },
+    { title: 'Louis Couperin, „Double par M.r Couperin“ zu Lebègues Gavotte, Bauyn-Hs., 3. Teil, fol. 40r',
+      scores: [['Gavotte und Double (PDF, Scan BnF)', NOTEN('Bauyn_Lebegue_Gavotte_Double-Couperin.pdf')]],
+      recordings: [['Blandine Verlet, Gesamtaufnahme ab 1:16:46', 'https://www.youtube.com/watch?v=1qgWZxIYRFc&t=4606s']] }] } },
+  { title: '*La belle homicide*', dots: [
+    { label: 'Gaultier', year: 1660, yearLabel: 'Datum offen', source: true, title: '*La belle homicide*, „Courante de M.r Gautier“, Laute; ob Ennemond oder Denis Gaultier, ist offen',
+      scores: [['Moutons Druck, S. 14–15 (PDF, Scan BnF)', NOTEN('Mouton_La-belle-homicide_Courante-und-Double.pdf')]],
+      recordings: [['Yair Avidor, Courante und Double', yt('ZIJ_nx1tbRg')]] },
+    { label: 'Mouton, Double', year: 1680, yearLabel: 'Druck um 1680 oder 1698', title: 'Charles Mouton, *Double de la belle homicide*, *Pièces de luth sur différents modes*, Paris, S. 16–17',
+      scores: [['Druck, Courante und Double, S. 14–17 (PDF, Scan BnF)', NOTEN('Mouton_La-belle-homicide_Courante-und-Double.pdf')]],
+      recordings: [['Yair Avidor, Courante und Double', yt('ZIJ_nx1tbRg')]] },
+    { label: 'Milleran-Hs.', year: 1693, yearLabel: '1692–94', title: '„Double par m.r Mouton“, Lautenbuch René Millerans, F-Pn Rés. 823, fol. 92v–93r',
+      scores: [['Courante und Double, fol. 91v–93r (PDF, Scan BnF)', NOTEN('Milleran_Res823_Belle-homicide_Double-Mouton.pdf')]] },
+  ] },
+  { title: '*Rochers, je ne veux point*', dots: [
+    { label: 'Bacilly', year: 1668, yearLabel: 'Datum offen', source: true, title: 'Bénigne de Bacilly, Air *Rochers, je ne veux point*' },
+    { label: 'Hotteterre, Double', year: 1720, yearLabel: '1710–30', title: '*Air de Bacilly. Pour la Flute Seule* mit *Double*, in Hotteterre, *Airs et brunettes*, Paris: Hotteterre et Boivin, S. 64; das Double ist mit der zweiten Strophe textiert und könnte von Bacilly selbst stammen',
+      scores: [['*Airs et brunettes*, S. 64 (PDF, Scan BnF)', NOTEN('Hotteterre_Airs-et-brunettes_Bacilly-Double.pdf')]],
+      recordings: [['Katja Beisch, Altblockflöte, Yamato Hasumi, Theorbe', yt('y8e8TUtzOko')]] },
+  ] },
+  { title: '*Musicalische Handleitung*', dots: [
+    { label: 'Niedt', year: 1706, source: true, title: 'Friedrich Erhardt Niedt, *Handleitung zur Variation*, Teil II der *Musicalischen Handleitung*, Hamburg 1706; darin „Wie man aus einem schlechten General-Bass, Præludia, Alemanden, Couranten, Sarabanden, Menueten, Giquen und Ciacconen machen kan“',
+      scores: [['Titelblatt und der Abschnitt über den einen Bass (PDF, Scan BSB)', NOTEN('Niedt_Handleitung-zur-Variation_1706_Suite.pdf')], ['ganzer Druck (BSB)', 'https://www.digitale-sammlungen.de/view/bsb10527644'], ['alle drei Teile, auch die 2. Auflage von Mattheson 1721 (IMSLP)', 'https://imslp.org/wiki/Musicalische_Handleitung_(Niedt,_Friedrich_Erhardt)']] },
+  ] },
   { title: 'Marcello, Oboenkonzert d-Moll', dots: [
     { label: 'Marcello', year: 1712, yearLabel: 'vor 1715 in Abschrift, gedruckt um 1716/17', source: true,
       title: 'Alessandro Marcello, Oboenkonzert d-Moll; gedruckt in *Concerti a cinque*, Amsterdam: Jeanne Roger, um 1716/17',
-      scores: [['Oboenstimme, Roger, Adagio S. 4 (PDF)', NOTEN('Marcello_Oboenkonzert-d_Roger_Oboe.pdf')]],
+      scores: [['Oboenstimme, Roger, Adagio S. 4 (PDF)', NOTEN('Marcello_Oboenkonzert-d_Roger_Oboe.pdf')], ['Partitur, Ausgabe Nils Jönsson, Nr. 148686 (IMSLP)', 'https://imslp.org/wiki/Oboe_Concerto_in_D_minor,_S.Z799_(Marcello,_Alessandro)']],
       recordings: [['Marcel Ponseele, Il Gardellino, Adagio', yt('A0jNtvTr5AU')]] },
     { label: 'Bach', year: 1715, yearLabel: 'Weimar, um 1715', title: 'Johann Sebastian Bach, Concerto d-Moll BWV 974 nach A. Marcello',
       scores: [['BGA 42, Adagio S. 75–76 (PDF)', NOTEN('Bach_BWV974_BGA42.pdf')], ['P 280 (SBB), Scan 18–22', 'http://resolver.staatsbibliothek-berlin.de/SBB000165DE00000000']],
@@ -233,24 +288,31 @@ const TODAY = [
       scores: [['Stimmen, Walsh (PDF)', NOTEN('Geminiani_Concerto-12-Follia_Walsh_Stimmen.pdf')]],
       recordings: [['Voices of Music, mit Zeitmarken je Abschnitt', yt('sRKy0nAXDsY')], ['Ensemble 415, Chiara Banchini', yt('meqGhHKtMfk')]] },
   ] },
-  { title: '*Ich danke dem Herrn*', dots: [
-    { label: 'Schütz', year: 1619, source: true, title: 'Heinrich Schütz, *Ich danke dem Herrn* SWV 34, *Psalmen Davids*, Dresden 1619, mehrchörig',
-      recordings: [['Cantus Cölln', yt('z6zdI22iqgU')]] },
-    { label: 'Schütz', year: 1636, source: true, title: 'Heinrich Schütz, *Ich danke dem Herrn* SWV 284, *Kleine geistliche Concerte* I, Leipzig 1636, Alt und Orgel',
-      scores: [['Orgelstimme 1636 (PDF)', NOTEN('Schuetz_1636_SWV284_Organum.pdf')], ['Widmung 1636 (PDF)', NOTEN('Schuetz_1636_Widmung.pdf')]],
-      recordings: [['Weser-Renaissance Bremen', yt('Q8DZ288EJ8w')]] },
+  { title: 'Bach, *Fuga* g-Moll BWV 1001', dots: [
+    { label: 'Violine', year: 1720, source: true, title: 'Johann Sebastian Bach, Sonate g-Moll BWV 1001, 2. Satz *Fuga*; *Sei Solo à Violino senza Basso accompagnato*, Autograph 1720',
+      scores: [['Autograph D-B Mus.ms. Bach P 967, Titelblatt und *Fuga* (PDF)', NOTEN('Bach_BWV1001_Fuga_Autograph-P967.pdf')]],
+      recordings: [['Iris Kengen, Barockvioline, nur die *Fuga*', yt('NvwkFBzUMMM')], ['Shunske Sato, die ganze Sonate', yt('MRKy3kX8XUM')]] },
+    { label: 'Laute', year: 1727, yearLabel: 'Datum offen', title: '*Fuga del Signore Bach*, BWV 1000, Lautentabulatur von Johann Christian Weyrauch, Leipzig, Becker III.11.4; ob Bach oder Weyrauch bearbeitet hat, ist offen',
+      scores: [['Weyrauchs Tabulatur, Titel und *Fuga* (PDF, Scan SLUB)', NOTEN('Bach_BWV1000_Weyrauch_Becker-III-11-4.pdf')], ['ganzes Digitalisat, mit Beckers Übertragung (SLUB)', 'https://digital.slub-dresden.de/id454513704'], ['NBA V/10, Tabulatur mit Übertragung (IMSLP)', 'https://imslp.org/wiki/Fugue_in_G_minor,_BWV_1000_(Bach,_Johann_Sebastian)']],
+      recordings: [['Evangelina Mascardi, Barocklaute', yt('DD_Kks-X0es')]] },
+    { label: 'Orgel', year: 1733, yearLabel: 'Datum offen', title: 'Präludium und Fuge d-Moll BWV 539, Orgel; die Fuge ist eine Bearbeitung der Violinfuge, Bearbeiter und Echtheit sind unsicher',
+      scores: [['BGA 15, S. 148–153 (PDF)', NOTEN('Bach_BWV539_BGA15.pdf')]],
+      recordings: [['Reitze Smits, Präludium und Fuge', yt('VHEilVQ6WYE')]] },
   ] },
-  { title: '*Wie’s Gott gefällt*', dots: [
-    { label: 'Scheidt', year: 1631, source: true, title: 'Samuel Scheidt, *Wie’s Gott gefällt*, *Geistliche Concerten* I, 1631, wenige Stimmen; 1634 nennt Scheidt Fassungen „mit vielen Stimmen“',
-      scores: [['Scheidts Notiz 1634, bei Lauterwasser 2017 (PDF)', NOTEN('Scheidt_1634_Notiz.pdf')]],
-      recordings: [['La Capella Ducale, Musica Fiata, große Fassung rekonstruiert von Roland Wilson', yt('KFghXC-zaHM')]] },
+  { title: 'Bach, *Preludio* E-Dur BWV 1006', dots: [
+    { label: 'Violine', year: 1720, source: true, title: 'Johann Sebastian Bach, Partita E-Dur BWV 1006, *Preludio*; *Sei Solo à Violino senza Basso accompagnato*, Autograph 1720',
+      scores: [['Autograph D-B Mus.ms. Bach P 967, Titelblatt und *Preludio* (PDF)', NOTEN('Bach_BWV1006_Preludio_Autograph-P967.pdf')]],
+      recordings: [['Shunske Sato, die ganze Partita, *Preludio* am Anfang', yt('gYT1JUq0k04')]] },
+    { label: 'Kantate BWV 29', year: 1731, yearLabel: 'Leipzig, 27. August 1731', title: 'Johann Sebastian Bach, Kantate *Wir danken dir, Gott, wir danken dir* BWV 29 zur Ratswahl, Sinfonia, D-Dur, obligate Orgel mit Trompeten, Pauken, Oboen und Streichern',
+      scores: [['Autograph D-B Mus.ms. Bach P 166, Titel und Sinfonia (PDF)', NOTEN('Bach_BWV29_Sinfonia_Autograph-P166.pdf')], ['BGA 5, S. 273–287 (PDF)', NOTEN('Bach_BWV29_Sinfonia_BGA5.pdf')]],
+      recordings: [['Netherlands Bach Society, nur die Sinfonia', yt('sqdXwd7FEyI')], ['J. S. Bach-Stiftung, ganze Kantate, Sinfonia ab 0:33', 'https://www.youtube.com/watch?v=M2yPLv1js_4&t=33s']] },
   ] },
 ];
 
-/* ---------- axis: 1600–1650 and 1680–1730 get more room, the empty decades between them almost none ---------- */
+/* ---------- axis: the sixteenth century gets less room than what follows ---------- */
 
-const AXIS = { rates: [[1530, 5], [1600, 8.5], [1652, 1.1], [1678, 8.5]], end: 1738 };
-const DECADES = [...range(13).map(k => 1530 + k * 10), ...range(6).map(k => 1680 + k * 10)];
+const AXIS = { rates: [[1530, 5], [1600, 8.5]], end: 1738 };
+const DECADES = range(21).map(k => 1530 + k * 10);
 const GEO = { left: 22, top: 30, titleH: 24, labelDy: 18, tierH: 15, rowGap: 16, groupGap: 22, gap: 9 };
 
 function range(n) { return Array.from({ length: n }, (_, i) => i); }
@@ -267,8 +329,8 @@ const plainText = s => s.replaceAll('*', '');
 async function labelMeasure() {
   await Promise.all(['12.5px "Source Serif 4"', 'italic 12.5px "Source Serif 4"'].map(f => document.fonts.load(f).catch(() => null)));
   const ctx = document.createElement('canvas').getContext('2d');
-  return s => segments(s).reduce((w, x) => {
-    ctx.font = `${x.italic ? 'italic ' : ''}12.5px "Source Serif 4", Georgia, serif`;
+  return (s, px = 12.5) => segments(s).reduce((w, x) => {
+    ctx.font = `${x.italic ? 'italic ' : ''}${px}px "Source Serif 4", Georgia, serif`;
     return w + ctx.measureText(x.t).width;
   }, 0);
 }
@@ -311,8 +373,9 @@ function layoutAll(measure) {
   const today = stack(TODAY, past.at(-1).bottom + GEO.groupGap, true);
   const rows = [...past, ...today];
   const labelEnds = rows.flatMap(r => r.dots.map(d => d.x + d.w / 2 + GEO.left));
+  const titleEnds = rows.map(r => Math.min(...r.dots.map(d => d.x)) - 5 + measure(r.title, 15) + GEO.left);
   return { rows, joins: [...new Set(rows.map(r => r.join).filter(Boolean))],
-    width: Math.max(xOfYear(AXIS.end), ...labelEnds), height: today.at(-1).bottom };
+    width: Math.max(xOfYear(AXIS.end), ...labelEnds, ...titleEnds), height: today.at(-1).bottom };
 }
 
 /* ---------- rendering ---------- */
@@ -339,8 +402,7 @@ function drawAxis(svg, layout) {
     svgEl('line', { class: 'grid', x1: x, x2: x, y1: GEO.top - 6, y2: layout.height }, g);
     svgEl('text', { class: 'tick', x, y: GEO.top - 12 }, g).textContent = year;
   });
-  [[1530, 1652], [1678, AXIS.end - 4]].forEach(([a, b]) =>
-    svgEl('line', { class: 'axis', x1: f1(xOfYear(a)), x2: f1(xOfYear(b)), y1: GEO.top - 6, y2: GEO.top - 6 }, g));
+  svgEl('line', { class: 'axis', x1: f1(xOfYear(1530)), x2: f1(xOfYear(AXIS.end - 4)), y1: GEO.top - 6, y2: GEO.top - 6 }, g);
 }
 
 function drawStrand(svg, row, onPick) {
