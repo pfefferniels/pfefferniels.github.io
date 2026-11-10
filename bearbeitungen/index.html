@@ -217,9 +217,6 @@ const STRANDS = [
       scores: [['Scheidts Notiz 1634, bei Lauterwasser 2017 (PDF)', NOTEN('Scheidt_1634_Notiz.pdf')]],
       recordings: [['La Capella Ducale, Musica Fiata, große Fassung rekonstruiert von Roland Wilson', yt('KFghXC-zaHM')]] },
   ] },
-];
-
-const TODAY = [
   { rows: [
     { title: '*Le Moutier*', dots: [
       { label: 'Chambonnières', year: 1650, yearLabel: 'vor 1661', source: true, title: 'Jacques Champion de Chambonnières, Allemande *Le Moutier*, C-Dur; Bauyn-Hs., F-Pn Rés. Vm7 674, fol. 1r',
@@ -263,15 +260,6 @@ const TODAY = [
     { label: 'Niedt', year: 1706, source: true, title: 'Friedrich Erhardt Niedt, *Handleitung zur Variation*, Teil II der *Musicalischen Handleitung*, Hamburg 1706; darin „Wie man aus einem schlechten General-Bass, Præludia, Alemanden, Couranten, Sarabanden, Menueten, Giquen und Ciacconen machen kan“',
       scores: [['Titelblatt und der Abschnitt über den einen Bass (PDF, Scan BSB)', NOTEN('Niedt_Handleitung-zur-Variation_1706_Suite.pdf')], ['ganzer Druck (BSB)', 'https://www.digitale-sammlungen.de/view/bsb10527644'], ['alle drei Teile, auch die 2. Auflage von Mattheson 1721 (IMSLP)', 'https://imslp.org/wiki/Musicalische_Handleitung_(Niedt,_Friedrich_Erhardt)']] },
   ] },
-  { title: 'Marcello, Oboenkonzert d-Moll', dots: [
-    { label: 'Marcello', year: 1712, yearLabel: 'vor 1715 in Abschrift, gedruckt um 1716/17', source: true,
-      title: 'Alessandro Marcello, Oboenkonzert d-Moll; gedruckt in *Concerti a cinque*, Amsterdam: Jeanne Roger, um 1716/17',
-      scores: [['Oboenstimme, Roger, Adagio S. 4 (PDF)', NOTEN('Marcello_Oboenkonzert-d_Roger_Oboe.pdf')], ['Partitur, Ausgabe Nils Jönsson, Nr. 148686 (IMSLP)', 'https://imslp.org/wiki/Oboe_Concerto_in_D_minor,_S.Z799_(Marcello,_Alessandro)']],
-      recordings: [['Marcel Ponseele, Il Gardellino, Adagio', yt('A0jNtvTr5AU')]] },
-    { label: 'Bach', year: 1715, yearLabel: 'Weimar, um 1715', title: 'Johann Sebastian Bach, Concerto d-Moll BWV 974 nach A. Marcello',
-      scores: [['BGA 42, Adagio S. 75–76 (PDF)', NOTEN('Bach_BWV974_BGA42.pdf')], ['P 280 (SBB), Scan 18–22', 'http://resolver.staatsbibliothek-berlin.de/SBB000165DE00000000']],
-      recordings: [['Benjamin Alard, Adagio', yt('i7EHBd-2RPo')], ['Patrick Ayrton, Adagio ab 3:30', 'https://www.youtube.com/watch?v=W6PzceNJom8&t=210s']] },
-  ] },
   { title: 'Albinoni, Concerto op. 2/8', dots: [
     { label: 'Albinoni', year: 1700, source: true, title: 'Tomaso Albinoni, Concerto IV G-Dur, op. 2/8, *Sinfonie e concerti a cinque*, Venedig 1700',
       scores: [['Violino primo, Sala 1700 (PDF)', NOTEN('Albinoni_op2-8_Sala1700_Violino-primo.pdf')]],
@@ -306,6 +294,28 @@ const TODAY = [
     { label: 'Kantate BWV 29', year: 1731, yearLabel: 'Leipzig, 27. August 1731', title: 'Johann Sebastian Bach, Kantate *Wir danken dir, Gott, wir danken dir* BWV 29 zur Ratswahl, Sinfonia, D-Dur, obligate Orgel mit Trompeten, Pauken, Oboen und Streichern',
       scores: [['Autograph D-B Mus.ms. Bach P 166, Titel und Sinfonia (PDF)', NOTEN('Bach_BWV29_Sinfonia_Autograph-P166.pdf')], ['BGA 5, S. 273–287 (PDF)', NOTEN('Bach_BWV29_Sinfonia_BGA5.pdf')]],
       recordings: [['Netherlands Bach Society, nur die Sinfonia', yt('sqdXwd7FEyI')], ['J. S. Bach-Stiftung, ganze Kantate, Sinfonia ab 0:33', 'https://www.youtube.com/watch?v=M2yPLv1js_4&t=33s']] },
+  ] },
+];
+
+const SYNOPSE_974 = ['Synopse Adagio, Marcello und Bach (PDF)', NOTEN('Synopse_Marcello-Bach-BWV974_Adagio.pdf')];
+const SYNOPSE_995 = ['Synopse Prélude und Allemande, Violoncello nach g-Moll transponiert (PDF)', NOTEN('Synopse_BWV1011-BWV995_Prelude-Allemande.pdf')];
+
+const TODAY = [
+  { title: 'Marcello, Oboenkonzert d-Moll', dots: [
+    { label: 'Marcello', year: 1712, yearLabel: 'vor 1715 in Abschrift, gedruckt um 1716/17', source: true,
+      title: 'Alessandro Marcello, Oboenkonzert d-Moll; gedruckt in *Concerti a cinque*, Amsterdam: Jeanne Roger, um 1716/17',
+      scores: [SYNOPSE_974, ['Oboenstimme, Roger, Adagio S. 4 (PDF)', NOTEN('Marcello_Oboenkonzert-d_Roger_Oboe.pdf')], ['Partitur, Ausgabe Nils Jönsson, Nr. 148686 (IMSLP)', 'https://imslp.org/wiki/Oboe_Concerto_in_D_minor,_S.Z799_(Marcello,_Alessandro)']],
+      recordings: [['Marcel Ponseele, Il Gardellino, Adagio', yt('A0jNtvTr5AU')]] },
+    { label: 'Bach', year: 1715, yearLabel: 'Weimar, um 1715', title: 'Johann Sebastian Bach, Concerto d-Moll BWV 974 nach A. Marcello',
+      scores: [SYNOPSE_974, ['NBA V/11 (IMSLP)', 'https://imslp.org/wiki/Concerto_in_D_minor,_BWV_974_(Bach,_Johann_Sebastian)'], ['BGA 42, Adagio S. 75–76 (PDF)', NOTEN('Bach_BWV974_BGA42.pdf')], ['P 280 (SBB), Scan 18–22', 'http://resolver.staatsbibliothek-berlin.de/SBB000165DE00000000']],
+      recordings: [['Benjamin Alard, Adagio', yt('i7EHBd-2RPo')], ['Patrick Ayrton, Adagio ab 3:30', 'https://www.youtube.com/watch?v=W6PzceNJom8&t=210s']] },
+  ] },
+  { title: 'Bach, Suite c-Moll BWV 1011', dots: [
+    { label: 'Violoncello', year: 1720, yearLabel: 'um 1720', source: true,
+      title: 'Johann Sebastian Bach, Suite c-Moll BWV 1011 für Violoncello, A-Saite nach G gestimmt; kein Autograph, Abschriften von Johann Peter Kellner und Anna Magdalena Bach',
+      scores: [SYNOPSE_995, ['IMSLP', 'https://imslp.org/wiki/Cello_Suite_No.5_in_C_minor,_BWV_1011_(Bach,_Johann_Sebastian)']] },
+    { label: 'Laute', year: 1729, yearLabel: 'Leipzig, 1727–31', title: 'Johann Sebastian Bach, Suite g-Moll BWV 995, *Pièces pour la Luth à Monsieur Schouster*, Autograph',
+      scores: [SYNOPSE_995, ['NBA V/10 (IMSLP)', 'https://imslp.org/wiki/Suite_in_G_minor,_BWV_995_(Bach,_Johann_Sebastian)']] },
   ] },
 ];
 
