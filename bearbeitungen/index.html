@@ -21,17 +21,20 @@
     --grid: #f3f4f6;
     --rule: #e5e7eb;
     --shadow: rgba(17, 24, 39, 0.10);
+    --hull: #f3f4f6; --hull-rim: #e5e7eb; --hull-hover: #e9ebef;
     --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg: #0f1115; --fg: #e5e7eb; --muted: #9ca3af; --line: #3a3f48; --grid: #181b21; --rule: #2a2d34;
+      --hull: #15181d; --hull-rim: #2a2d34; --hull-hover: #1b1f26;
       --shadow: rgba(0, 0, 0, 0.5);
       color-scheme: dark;
     }
   }
   :root[data-theme="dark"] {
     --bg: #0f1115; --fg: #e5e7eb; --muted: #9ca3af; --line: #3a3f48; --grid: #181b21; --rule: #2a2d34;
+    --hull: #15181d; --hull-rim: #2a2d34; --hull-hover: #1b1f26;
     --shadow: rgba(0, 0, 0, 0.5);
     color-scheme: dark;
   }
@@ -52,8 +55,16 @@
   .axis { stroke: var(--line); stroke-width: 1; }
   .tick { font-size: 11px; fill: var(--muted); text-anchor: middle; font-variant-numeric: tabular-nums; }
 
-  .strand { stroke: var(--line); stroke-width: 1.5; fill: none; }
-  .title { font-size: 15px; fill: var(--fg); }
+  .strand { stroke: var(--line); stroke-width: 1.5; fill: none; pointer-events: none; }
+  .title { font-size: 15px; fill: var(--fg); pointer-events: none; }
+
+  .deck { cursor: pointer; outline: none; }
+  .deck-rim { fill: var(--hull-rim); stroke: var(--hull-rim); stroke-linejoin: round; }
+  .deck-fill { fill: var(--hull); stroke: var(--hull); stroke-linejoin: round; }
+  .deck-label { font-size: 12.5px; font-style: italic; fill: var(--muted); text-anchor: end; }
+  .deck:hover .deck-fill, .deck:focus-visible .deck-fill { fill: var(--hull-hover); stroke: var(--hull-hover); }
+  .deck:hover .deck-label, .deck:focus-visible .deck-label { fill: var(--fg); text-decoration: underline; text-underline-offset: 2px; }
+  .deck:focus-visible .deck-rim { fill: var(--fg); stroke: var(--fg); }
 
   .dot { cursor: pointer; outline: none; }
   .dot circle { fill: var(--bg); stroke: var(--muted); stroke-width: 1.4; }
@@ -280,10 +291,10 @@ const STRANDS = [
     { label: 'Violine', year: 1720, source: true, title: 'Johann Sebastian Bach, Sonate g-Moll BWV 1001, 2. Satz *Fuga*; *Sei Solo à Violino senza Basso accompagnato*, Autograph 1720',
       scores: [['Autograph D-B Mus.ms. Bach P 967, Titelblatt und *Fuga* (PDF)', NOTEN('Bach_BWV1001_Fuga_Autograph-P967.pdf')]],
       recordings: [['Iris Kengen, Barockvioline, nur die *Fuga*', yt('NvwkFBzUMMM')], ['Shunske Sato, die ganze Sonate', yt('MRKy3kX8XUM')]] },
-    { label: 'Laute', year: 1727, yearLabel: 'Datum offen', title: '*Fuga del Signore Bach*, BWV 1000, Lautentabulatur von Johann Christian Weyrauch, Leipzig, Becker III.11.4; ob Bach oder Weyrauch bearbeitet hat, ist offen',
+    { label: 'Laute', year: 1727, yearLabel: 'Datum offen', deck: true, title: '*Fuga del Signore Bach*, BWV 1000, Lautentabulatur von Johann Christian Weyrauch, Leipzig, Becker III.11.4; ob Bach oder Weyrauch bearbeitet hat, ist offen',
       scores: [['Weyrauchs Tabulatur, Titel und *Fuga* (PDF, Scan SLUB)', NOTEN('Bach_BWV1000_Weyrauch_Becker-III-11-4.pdf')], ['ganzes Digitalisat, mit Beckers Übertragung (SLUB)', 'https://digital.slub-dresden.de/id454513704'], ['NBA V/10, Tabulatur mit Übertragung (IMSLP)', 'https://imslp.org/wiki/Fugue_in_G_minor,_BWV_1000_(Bach,_Johann_Sebastian)']],
       recordings: [['Evangelina Mascardi, Barocklaute', yt('DD_Kks-X0es')]] },
-    { label: 'Orgel', year: 1733, yearLabel: 'Datum offen', title: 'Präludium und Fuge d-Moll BWV 539, Orgel; die Fuge ist eine Bearbeitung der Violinfuge, Bearbeiter und Echtheit sind unsicher',
+    { label: 'Orgel', year: 1733, yearLabel: 'Datum offen', deck: true, title: 'Präludium und Fuge d-Moll BWV 539, Orgel; die Fuge ist eine Bearbeitung der Violinfuge, Bearbeiter und Echtheit sind unsicher',
       scores: [['BGA 15, S. 148–153 (PDF)', NOTEN('Bach_BWV539_BGA15.pdf')]],
       recordings: [['Reitze Smits, Präludium und Fuge', yt('VHEilVQ6WYE')]] },
   ] },
@@ -291,7 +302,7 @@ const STRANDS = [
     { label: 'Violine', year: 1720, source: true, title: 'Johann Sebastian Bach, Partita E-Dur BWV 1006, *Preludio*; *Sei Solo à Violino senza Basso accompagnato*, Autograph 1720',
       scores: [['Autograph D-B Mus.ms. Bach P 967, Titelblatt und *Preludio* (PDF)', NOTEN('Bach_BWV1006_Preludio_Autograph-P967.pdf')]],
       recordings: [['Shunske Sato, die ganze Partita, *Preludio* am Anfang', yt('gYT1JUq0k04')]] },
-    { label: 'Kantate BWV 29', year: 1731, yearLabel: 'Leipzig, 27. August 1731', title: 'Johann Sebastian Bach, Kantate *Wir danken dir, Gott, wir danken dir* BWV 29 zur Ratswahl, Sinfonia, D-Dur, obligate Orgel mit Trompeten, Pauken, Oboen und Streichern',
+    { label: 'Kantate BWV 29', year: 1731, yearLabel: 'Leipzig, 27. August 1731', deck: true, title: 'Johann Sebastian Bach, Kantate *Wir danken dir, Gott, wir danken dir* BWV 29 zur Ratswahl, Sinfonia, D-Dur, obligate Orgel mit Trompeten, Pauken, Oboen und Streichern',
       scores: [['Autograph D-B Mus.ms. Bach P 166, Titel und Sinfonia (PDF)', NOTEN('Bach_BWV29_Sinfonia_Autograph-P166.pdf')], ['BGA 5, S. 273–287 (PDF)', NOTEN('Bach_BWV29_Sinfonia_BGA5.pdf')]],
       recordings: [['Netherlands Bach Society, nur die Sinfonia', yt('sqdXwd7FEyI')], ['J. S. Bach-Stiftung, ganze Kantate, Sinfonia ab 0:33', 'https://www.youtube.com/watch?v=M2yPLv1js_4&t=33s']] },
   ] },
@@ -306,7 +317,7 @@ const TODAY = [
       title: 'Alessandro Marcello, Oboenkonzert d-Moll; gedruckt in *Concerti a cinque*, Amsterdam: Jeanne Roger, um 1716/17',
       scores: [SYNOPSE_974, ['Oboenstimme, Roger, Adagio S. 4 (PDF)', NOTEN('Marcello_Oboenkonzert-d_Roger_Oboe.pdf')], ['Partitur, Ausgabe Nils Jönsson, Nr. 148686 (IMSLP)', 'https://imslp.org/wiki/Oboe_Concerto_in_D_minor,_S.Z799_(Marcello,_Alessandro)']],
       recordings: [['Marcel Ponseele, Il Gardellino, Adagio', yt('A0jNtvTr5AU')]] },
-    { label: 'Bach', year: 1715, yearLabel: 'Weimar, um 1715', title: 'Johann Sebastian Bach, Concerto d-Moll BWV 974 nach A. Marcello',
+    { label: 'Bach', year: 1715, yearLabel: 'Weimar, um 1715', deck: true, title: 'Johann Sebastian Bach, Concerto d-Moll BWV 974 nach A. Marcello',
       scores: [SYNOPSE_974, ['NBA V/11 (IMSLP)', 'https://imslp.org/wiki/Concerto_in_D_minor,_BWV_974_(Bach,_Johann_Sebastian)'], ['BGA 42, Adagio S. 75–76 (PDF)', NOTEN('Bach_BWV974_BGA42.pdf')], ['P 280 (SBB), Scan 18–22', 'http://resolver.staatsbibliothek-berlin.de/SBB000165DE00000000']],
       recordings: [['Benjamin Alard, Adagio', yt('i7EHBd-2RPo')], ['Patrick Ayrton, Adagio ab 3:30', 'https://www.youtube.com/watch?v=W6PzceNJom8&t=210s']] },
   ] },
@@ -314,7 +325,7 @@ const TODAY = [
     { label: 'Violoncello', year: 1720, yearLabel: 'um 1720', source: true,
       title: 'Johann Sebastian Bach, Suite c-Moll BWV 1011 für Violoncello, A-Saite nach G gestimmt; kein Autograph, Abschriften von Johann Peter Kellner und Anna Magdalena Bach',
       scores: [SYNOPSE_995, ['IMSLP', 'https://imslp.org/wiki/Cello_Suite_No.5_in_C_minor,_BWV_1011_(Bach,_Johann_Sebastian)']] },
-    { label: 'Laute', year: 1729, yearLabel: 'Leipzig, 1727–31', title: 'Johann Sebastian Bach, Suite g-Moll BWV 995, *Pièces pour la Luth à Monsieur Schouster*, Autograph',
+    { label: 'Laute', year: 1729, yearLabel: 'Leipzig, 1727–31', deck: true, title: 'Johann Sebastian Bach, Suite g-Moll BWV 995, *Pièces pour la Luth à Monsieur Schouster*, Autograph',
       scores: [SYNOPSE_995, ['NBA V/10 (IMSLP)', 'https://imslp.org/wiki/Suite_in_G_minor,_BWV_995_(Bach,_Johann_Sebastian)']] },
   ] },
   { title: 'Vivaldi, Concerto a-Moll RV 356', dots: [
@@ -394,8 +405,63 @@ function layoutAll(measure) {
   const rows = [...past, ...today];
   const labelEnds = rows.flatMap(r => r.dots.map(d => d.x + d.w / 2 + GEO.left));
   const titleEnds = rows.map(r => Math.min(...r.dots.map(d => d.x)) - 5 + measure(r.title, 15) + GEO.left);
-  return { rows, joins: [...new Set(rows.map(r => r.join).filter(Boolean))],
+  return { rows, deck: layoutDeck(rows), joins: [...new Set(rows.map(r => r.join).filter(Boolean))],
     width: Math.max(xOfYear(AXIS.end), ...labelEnds, ...titleEnds), height: today.at(-1).bottom };
+}
+
+/* ---------- the arrangements on the slide page sit on one concave hull ---------- */
+
+const DECK = { href: 'bach/', label: 'Bach als Bearbeiter', pad: 10, concavity: 2, minEdge: 24 };
+
+const sqDist = (a, b) => (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2;
+const cross = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+const crosses = ([p, q], [r, s]) => cross(p, q, r) * cross(p, q, s) < 0 && cross(r, s, p) * cross(r, s, q) < 0;
+
+function sqSegDist(p, a, b) {
+  const len = sqDist(a, b);
+  const t = len && Math.max(0, Math.min(1, ((p[0] - a[0]) * (b[0] - a[0]) + (p[1] - a[1]) * (b[1] - a[1])) / len));
+  return sqDist(p, [a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])]);
+}
+
+// Andrew's monotone chain.
+const dropRightTurns = (h, p) => h.length >= 2 && cross(h.at(-2), h.at(-1), p) <= 0 ? dropRightTurns(h.slice(0, -1), p) : h;
+const halfHull = pts => pts.reduce((h, p) => [...dropRightTurns(h, p), p], []);
+function convexHull(points) {
+  const sorted = [...points].sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  return [...halfHull(sorted).slice(0, -1), ...halfHull([...sorted].reverse()).slice(0, -1)];
+}
+
+// Digging as in Agafonkin's concaveman: the longest edge gives way to the inner point nearest to it,
+// as long as that point lies close to both ends and the two new edges cross no other edge.
+function dig(hull, inner) {
+  const at = i => hull[(i + hull.length) % hull.length];
+  const edges = hull.map((a, i) => [a, at(i + 1)]);
+  const fits = (i, p) => {
+    const [a, b] = edges[i];
+    return Math.min(sqDist(p, a), sqDist(p, b)) <= sqDist(a, b) / DECK.concavity ** 2
+      && sqSegDist(p, a, b) < sqSegDist(p, at(i - 1), a) && sqSegDist(p, a, b) < sqSegDist(p, b, at(i + 2))
+      && !edges.some(e => crosses([a, p], e) || crosses([p, b], e));
+  };
+  const nearest = i => inner.filter(p => fits(i, p)).sort((p, q) => sqSegDist(p, ...edges[i]) - sqSegDist(q, ...edges[i]))[0];
+  const pick = edges.map((e, i) => ({ i, len: sqDist(...e), p: sqDist(...e) >= DECK.minEdge ** 2 && nearest(i) }))
+    .filter(c => c.p).sort((a, b) => b.len - a.len)[0];
+  return pick ? dig(hull.toSpliced(pick.i + 1, 0, pick.p), inner.filter(p => p !== pick.p)) : hull;
+}
+
+function concaveHull(points) {
+  const hull = convexHull(points);
+  return dig(hull, points.filter(p => !hull.includes(p)));
+}
+
+const corners = b => [[b.x1, b.y1], [b.x2, b.y1], [b.x2, b.y2], [b.x1, b.y2]];
+
+// The link's name stands at the hull's lower left corner, where the timeline is empty.
+const lowerLeft = (l, p) => p[0] < l[0] - 1 || (Math.abs(p[0] - l[0]) <= 1 && p[1] > l[1]) ? p : l;
+function layoutDeck(rows) {
+  const boxes = rows.flatMap(row => row.dots.filter(d => d.deck).map(d => hitBox(underLine(row, d))));
+  const hull = concaveHull(boxes.flatMap(corners));
+  const corner = hull.reduce(lowerLeft);
+  return { hull, label: { x: corner[0] - DECK.pad - 6, y: corner[1] + 3 } };
 }
 
 /* ---------- rendering ---------- */
@@ -441,12 +507,17 @@ const tailD = (x, y, j) =>
 const underLine = (row, d) => ({ ...d, cy: row.y, lx: d.x, ly: row.y + GEO.labelDy + d.tier * GEO.tierH, anchor: 'middle' });
 const besideDot = j => ({ ...j, cy: j.y, lx: j.x + 9, ly: j.y + 4, anchor: 'start' });
 
+// The area around a dot and its label that answers a click.
+const hitBox = d => ({
+  x1: d.anchor === 'start' ? d.x - 7 : d.lx - d.w / 2 - 3,
+  x2: d.anchor === 'start' ? d.lx + d.w + 3 : d.lx + d.w / 2 + 3,
+  y1: Math.min(d.cy - 7, d.ly - 13), y2: Math.max(d.cy + 7, d.ly + 4),
+});
+
 function drawDot(parent, d, onPick) {
   const g = svgEl('g', { class: `dot${d.source ? ' source' : ''}`, tabindex: 0, role: 'button',
     'aria-label': `${plainText(d.label)}, ${yearOf(d)}` }, parent);
-  const x1 = d.anchor === 'start' ? d.x - 7 : d.lx - d.w / 2 - 3;
-  const x2 = d.anchor === 'start' ? d.lx + d.w + 3 : d.lx + d.w / 2 + 3;
-  const y1 = Math.min(d.cy - 7, d.ly - 13), y2 = Math.max(d.cy + 7, d.ly + 4);
+  const { x1, x2, y1, y2 } = hitBox(d);
   svgEl('rect', { class: 'hit', x: f1(x1), y: f1(y1), width: f1(x2 - x1), height: f1(y2 - y1) }, g);
   svgEl('circle', { cx: f1(d.x), cy: f1(d.cy), r: d.source ? 4.2 : 3.6 }, g);
   richSpans(svgEl('text', { x: f1(d.lx), y: f1(d.ly), 'text-anchor': d.anchor }, g), d.label);
@@ -455,11 +526,21 @@ function drawDot(parent, d, onPick) {
   g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onPick(d, g); } });
 }
 
+// A thick round-joined stroke under the fill pads the hull and rounds its corners; the thicker one below is its rim.
+function drawDeck(svg, deck) {
+  const a = svgEl('a', { class: 'deck', href: DECK.href, 'aria-label': `${DECK.label}: Folien` }, svg);
+  const d = `M${deck.hull.map(p => p.map(f1).join(',')).join(' L')} Z`;
+  svgEl('path', { class: 'deck-rim', d, 'stroke-width': 2 * DECK.pad + 2 }, a);
+  svgEl('path', { class: 'deck-fill', d, 'stroke-width': 2 * DECK.pad }, a);
+  svgEl('text', { class: 'deck-label', x: f1(deck.label.x), y: f1(deck.label.y) }, a).textContent = DECK.label;
+}
+
 function render(layout, onPick) {
   const svg = document.getElementById('chart');
   svg.replaceChildren();
   svg.setAttribute('viewBox', `0 0 ${f1(layout.width)} ${f1(layout.height)}`);
   drawAxis(svg, layout);
+  drawDeck(svg, layout.deck);
   layout.rows.forEach(row => drawStrand(svg, row, onPick));
   layout.joins.forEach(j => drawDot(svg, besideDot(j), onPick));
 }

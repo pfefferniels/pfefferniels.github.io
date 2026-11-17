@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bach als Bearbeiter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400..700&family=Public+Sans:wght@400;600&display=swap">
+<style>
+  /* What the Slides renderer assumes before the deck's own rules: a 1920×1080 canvas, no margins, cover-fitted images. */
+  .canvas { width: 1920px; height: 1080px; transform-origin: 0 0; line-height: 1.2; text-align: left; }
+  .canvas section { width: 1920px; height: 1080px; position: relative; overflow: hidden; margin: 0; }
+  .canvas section[data-flat], .canvas section[data-flat] * { box-sizing: border-box; }
+  :where(.canvas) :where(h1, h2, h3, p) { margin: 0; position: relative; z-index: 1; }
+  :where(.canvas) h1 { font-size: 96px; font-weight: 600; }
+  :where(.canvas) h2 { font-size: 64px; font-weight: 600; }
+  :where(.canvas) h3 { font-size: 44px; font-weight: 600; }
+  :where(.canvas) p { font-size: 32px; font-weight: 400; }
+  :where(.canvas) img { display: block; object-fit: cover; }
+  :where(.canvas) aside { display: none; }
+  .canvas .crop { position: relative; overflow: hidden; }
+  .canvas .crop > img { position: absolute; max-width: none; max-height: none; object-fit: cover; }
+</style>
+<style>
+/* Catalogue of examples: white page, the music is the content; text stays small and gray around it. */
+:root {
+  --ink: #1F2328;
+  --soft: #4B5563;
+  --muted: #6B7280;
+  --rule: #E5E7EB;
+  --wash: #F3F4F6;
+  --paper: #FFFFFF;
+  --accent: #2F5D8A;
+  --accent-wash: #E8EEF5;
+  --warn: #8A5A00;
+  --warn-wash: #FBF1DE;
+  --display: 'EB Garamond', Georgia, serif;
+  --text: 'Public Sans', Arial, sans-serif;
+}
+
+.canvas { font-family: var(--text); color: var(--ink); }
+
+.canvas section { background: var(--paper); padding: 96px 120px 88px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px; }
+
+.canvas h1, .canvas h2, .canvas h3 { font-family: var(--display); color: var(--ink); font-weight: 600; }
+
+.eyebrow { font-family: var(--text); font-size: 24px; font-weight: 600; color: var(--accent); letter-spacing: 1px; }
+
+/* Cover */
+.cover { justify-content: center; gap: 40px; }
+.cover h1 { font-size: 132px; line-height: 1.0; }
+.cover .lede { font-size: 36px; color: var(--soft); width: 1300px; line-height: 1.35; }
+.cover .meta { font-size: 26px; color: var(--muted); }
+
+/* Section divider for a group of techniques */
+.group { background: var(--wash); justify-content: center; gap: 32px; }
+.group h2 { font-size: 96px; line-height: 1.05; }
+.group .lede { font-size: 34px; color: var(--soft); width: 1400px; line-height: 1.4; }
+
+/* Technique card */
+.technique h2 { font-size: 72px; line-height: 1.05; }
+.technique .definition { font-size: 34px; color: var(--soft); width: 1500px; line-height: 1.4; }
+.technique table { font-size: 26px; color: var(--ink); width: 1680px; }
+
+/* Instance slide */
+.instance { gap: 18px; }
+.instance .head { display: flex; flex-direction: column; gap: 6px; }
+.instance h2 { font-size: 48px; line-height: 1.1; }
+.instance .score { width: 1680px; height: 560px; object-fit: contain; }
+.instance .pair { display: flex; flex-direction: column; gap: 10px; }
+.instance .pair .label { font-size: 24px; font-weight: 600; color: var(--muted); }
+.instance .pair img { width: 1680px; height: 290px; object-fit: contain; }
+.instance .caption { font-size: 28px; line-height: 1.4; color: var(--ink); width: 1680px; }
+.instance .foot { display: flex; flex-direction: row; gap: 16px; align-items: center; }
+.instance .foot .src { font-size: 24px; color: var(--muted); }
+.instance .side { display: flex; flex-direction: row; gap: 40px; align-items: flex-start; }
+.instance .stack { display: flex; flex-direction: column; gap: 8px; }
+.instance .col { display: flex; flex-direction: column; gap: 6px; }
+.instance .lbl { font-size: 24px; font-weight: 600; color: var(--muted); }
+.instance .col img { object-fit: contain; }
+.tag { font-size: 24px; padding: 4px 14px; border-radius: 8px; background: var(--accent-wash); color: var(--accent); }
+.tag.caution { background: var(--warn-wash); color: var(--warn); }
+
+/* Overview tables */
+.overview h2 { font-size: 64px; }
+.overview table { font-size: 26px; color: var(--ink); width: 1680px; }
+.overview .note { font-size: 24px; color: var(--muted); width: 1680px; line-height: 1.4; }
+
+</style>
+<style>
+  :root {
+    --page-bg: #ffffff; --page-fg: #111827; --page-muted: #6b7280; --page-line: #e5e7eb; --page-hover: #f3f4f6;
+    --page-w: 1280px; --s: 0.5; --stage-s: 0.5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --page-bg: #0f1115; --page-fg: #e5e7eb; --page-muted: #9ca3af; --page-line: #2a2d34; --page-hover: #181b21; color-scheme: dark; }
+  }
+  :root[data-theme="dark"] { --page-bg: #0f1115; --page-fg: #e5e7eb; --page-muted: #9ca3af; --page-line: #2a2d34; --page-hover: #181b21; color-scheme: dark; }
+
+  html, body { margin: 0; }
+  body {
+    background: var(--page-bg); color: var(--page-fg);
+    font: 16px/1.45 'Public Sans', Arial, sans-serif;
+    padding: 20px max(16px, env(safe-area-inset-right, 0px)) 56px max(16px, env(safe-area-inset-left, 0px));
+  }
+  [hidden] { display: none !important; }
+
+  .top { max-width: var(--page-w); margin: 0 auto 8px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 20px; }
+  .top h1 { flex: 1 1 auto; margin: 0; font: 600 2rem/1.15 'EB Garamond', Georgia, serif; color: var(--page-fg); }
+  .back { order: -1; flex-basis: 100%; color: var(--page-muted); font-size: 0.95rem; text-decoration: none; }
+  .back:hover { color: var(--page-fg); text-decoration: underline; text-underline-offset: 0.18em; }
+  .present { all: unset; cursor: pointer; font-size: 0.95rem; padding: 4px 12px; border: 1px solid var(--page-line); border-radius: 6px; }
+  .present:hover { background: var(--page-hover); }
+  .present:focus-visible, .back:focus-visible, .frame:focus-visible { outline: 2px solid var(--page-fg); outline-offset: 3px; }
+
+  main { max-width: var(--page-w); margin: 0 auto; display: grid; gap: 22px; }
+  .part { margin: 26px 0 -8px; font: 600 1.35rem/1.25 'EB Garamond', Georgia, serif; color: var(--page-fg); }
+  .frame { margin: 0; display: grid; gap: 4px; cursor: pointer; border-radius: 4px; }
+  .screen { aspect-ratio: 16 / 9; overflow: hidden; background: #ffffff; border: 1px solid var(--page-line); border-radius: 4px; }
+  .screen > .canvas { transform: scale(var(--s)); }
+  .frame:hover .screen { border-color: var(--page-muted); }
+  figcaption { justify-self: end; font-size: 0.8rem; color: var(--page-muted); font-variant-numeric: tabular-nums; }
+
+  .stage { position: fixed; inset: 0; z-index: 10; background: var(--page-bg); display: grid; place-items: center; outline: none; }
+  .stage-screen { width: calc(1920px * var(--stage-s)); height: calc(1080px * var(--stage-s)); overflow: hidden; background: #ffffff; }
+  .stage-screen > .canvas { transform: scale(var(--stage-s)); }
+  .stage-bar {
+    position: fixed; right: 16px; bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    display: flex; align-items: center; gap: 4px; padding: 4px 6px;
+    background: var(--page-bg); border: 1px solid var(--page-line); border-radius: 8px;
+    font-size: 0.85rem; color: var(--page-muted); font-variant-numeric: tabular-nums;
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .stage.awake .stage-bar, .stage-bar:focus-within { opacity: 1; }
+  .stage-bar button { all: unset; cursor: pointer; padding: 2px 8px; border-radius: 4px; color: var(--page-fg); font-size: 1.05rem; line-height: 1; }
+  .stage-bar button:hover { background: var(--page-hover); }
+  .stage-bar button:focus-visible { outline: 2px solid var(--page-fg); }
+  #count { padding: 0 4px; min-width: 4.5em; text-align: center; }
+
+  @media print {
+    body { padding: 0; }
+    .top .present, .part, figcaption { display: none; }
+    .frame { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="back" href="../">Bearbeitungen im Überblick</a>
+  <h1>Bach als Bearbeiter</h1>
+  <button class="present" id="present">Präsentieren</button>
+</header>
+<main>
+<h2 class="part">A · Rahmen: Tonart, Lage, Umfang</h2>
+<figure class="frame" data-id="t-transposition" tabindex="0" role="button" aria-label="Folie 1 präsentieren"><div class="screen"><div class="canvas">
+<section id="t-transposition" class="technique">
+<h2 style="transform:translate(-8px, 653px)">Transponieren</h2>
+</section>
+</div></div><figcaption>1</figcaption></figure>
+<figure class="frame" data-id="fg01" tabindex="0" role="button" aria-label="Folie 2 präsentieren"><div class="screen"><div class="canvas">
+<section id="fg01" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/fg01-opening.png" alt="Fuge BWV 1001 und BWV 1000, Beginn" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="6405d345" style="position:absolute; top:807.42px; left:128px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Kürzungen/Einschübe</h2>
+</section>
+</div></div><figcaption>2</figcaption></figure>
+<figure class="frame" data-id="o03" tabindex="0" role="button" aria-label="Folie 3 präsentieren"><div class="screen"><div class="canvas">
+<section id="o03" class="instance">
+<div class="side">
+<div class="col"><p class="lbl" style="color:#1f2328">Vivaldi, op. 3 Nr. 8</p><img loading="lazy" src="img/bwv593_I_b52-54_model.png" alt="Vivaldi RV 522, I. Satz, Takt 51 bis 54" style="object-fit:contain;width:705px;height:466px;box-sizing:border-box;flex:0 0 auto"></div>
+<div class="col"><p class="lbl" style="color:#1f2328">Bach, BWV 593</p><img loading="lazy" src="img/bwv593_I_b52-54_bach.png" alt="BWV 593, I. Satz, Takt 49 bis 54" style="width:970px;height:417px"></div>
+</div>
+<h2 id="e80d258a" style="box-sizing:border-box; position:absolute; top:831.42px; left:152px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Oktavlage ändern</h2>
+</section>
+</div></div><figcaption>3</figcaption></figure>
+<figure class="frame" data-id="o07" tabindex="0" role="button" aria-label="Folie 4 präsentieren"><div class="screen"><div class="canvas">
+<section id="o07" class="instance">
+<div class="stack">
+<div class="col"><p class="lbl">Vivaldi, op. 3 Nr. 8, Violine I und II</p><img loading="lazy" src="img/bwv593_II_b31-33_model.png" alt="Vivaldi RV 522, II. Satz, Takt 28 bis 36" style="width:970px;height:335px"></div>
+<div class="col"><p class="lbl">Bach, BWV 593 (BGA 38)</p><img loading="lazy" src="img/bwv593_II_b31-33_bach.png" alt="BWV 593, II. Satz, Takt 30 bis 33" style="width:964px;height:159px"></div>
+</div>
+<h2 id="ee8ec2e4" style="box-sizing:border-box;position:absolute;top:855px;left:176px;width:1680px;font-family:'EB Garamond', Georgia, serif;font-size:72px;font-weight:600;line-height:1.05;color:#1f2328">Oktavlage ändern</h2>
+</section>
+</div></div><figcaption>4</figcaption></figure>
+<figure class="frame" data-id="m09" tabindex="0" role="button" aria-label="Folie 5 präsentieren"><div class="screen"><div class="canvas">
+<section id="m09" class="instance">
+<div class="side">
+<div class="col"><p class="lbl">Marcello (Ausgabe Jönsson)</p><img loading="lazy" src="img/bwv974_III_b28-36_model.png" alt="Marcello, III. Satz, Takt 27 bis 44" style="width:660px;height:650px;flex:0 0 auto;box-sizing:border-box"></div>
+<div class="col"><p class="lbl">Bach, BWV 974 (BGA 42)</p><img loading="lazy" src="img/bwv974_III_b28-36_bach.png" alt="BWV 974, III. Satz, Takt 28 bis 41" style="width:1049px;height:332px;flex:0 0 auto;transform:translate(11px, 43px);box-sizing:border-box"></div>
+</div>
+<h2 id="68022f0d" style="box-sizing:border-box;position:absolute;top:879px;left:200px;width:1680px;font-family:'EB Garamond', Georgia, serif;font-size:72px;font-weight:600;line-height:1.05;color:#1f2328">Auftakfigur zwischen Phrasen, Oktavlage ändern</h2>
+</section>
+</div></div><figcaption>5</figcaption></figure>
+<figure class="frame" data-id="m05" tabindex="0" role="button" aria-label="Folie 6 präsentieren"><div class="screen"><div class="canvas">
+<section id="m05" class="instance">
+<div class="side">
+<div class="col"><p class="lbl" style="color:#1f2328;transform:translate(-44px, -67px)">Marcello (Ausgabe Jönsson)</p><img loading="lazy" src="img/bwv974_I_b41-49_model.png" alt="Marcello, I. Satz, Takt 42 bis 57" style="transform:translate(-48px, -57px);width:537px;height:973px;box-sizing:border-box;flex:0 0 auto"></div>
+<div class="col"><p class="lbl" style="color:#1f2328">Bach, BWV 974 (BGA 42)</p><img loading="lazy" src="img/bwv974_I_b41-49_bach.png" alt="BWV 974, I. Satz, Takt 41 bis 49" style="width:1076px;height:532px"></div>
+</div>
+<h2 id="5419c9be" style="position:absolute;font-family:'EB Garamond', Georgia, serif;font-size:72px;font-weight:600;line-height:1.05;color:#1f2328;top:742px;left:825px;width:729px;height:87px;box-sizing:border-box">Kürzungen</h2>
+</section>
+</div></div><figcaption>6</figcaption></figure>
+<h2 class="part">B · Das Implizite ausschreiben</h2>
+<figure class="frame" data-id="fg03" tabindex="0" role="button" aria-label="Folie 7 präsentieren"><div class="screen"><div class="canvas">
+<section id="fg03" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/fg03-sustain.png" alt="Fuge, Violine Takt 15 bis 17 mit Laute und Orgel" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="557b9728" style="position:absolute; top:849.99px; left:112.03px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Antippen</h2>
+</section>
+</div></div><figcaption>7</figcaption></figure>
+<figure class="frame" data-id="fg08" tabindex="0" role="button" aria-label="Folie 8 präsentieren"><div class="screen"><div class="canvas">
+<section id="fg08" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/fg08-bariolage-line.png" alt="Fuge, Violine Takt 64 bis 65 mit Laute und Orgel" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="998b7cc5" style="position:absolute; top:873.99px; left:136.03px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Sexten/Terzen ergänzen</h2>
+  <h2 id="2d1f7bda" style="position:absolute; top:744px; left:136.02px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Verdeckte Mehrstimmigkeit</h2>
+</section>
+</div></div><figcaption>8</figcaption></figure>
+<figure class="frame" data-id="su07" tabindex="0" role="button" aria-label="Folie 9 präsentieren"><div class="screen"><div class="canvas">
+<section id="su07" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/su07-fugue-47-53.png" alt="BWV 1011 und BWV 995, Fugenteil Takt 47 bis 53" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="7bc3e8b3" style="position:absolute; top:768px; left:160.02px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Begleitstimmen darüber</h2>
+</section>
+</div></div><figcaption>9</figcaption></figure>
+<figure class="frame" data-id="su09" tabindex="0" role="button" aria-label="Folie 10 präsentieren"><div class="screen"><div class="canvas">
+<section id="su09" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/su09-fugue-101-106.png" alt="BWV 1011 und BWV 995, Fugenteil Takt 101 bis 106" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="5716406c" style="position:absolute; top:768px; left:160.02px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Verdeckte Mehrstimmigkeit</h2>
+</section>
+</div></div><figcaption>10</figcaption></figure>
+<figure class="frame" data-id="su01" tabindex="0" role="button" aria-label="Folie 11 präsentieren"><div class="screen"><div class="canvas">
+<section id="su01" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/su01-prelude-1-3.png" alt="BWV 1011 und BWV 995, Prélude Takt 1 bis 3" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="44929ec9" style="position:absolute; top:768px; left:160.02px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Volle Akkorde</h2>
+</section>
+</div></div><figcaption>11</figcaption></figure>
+<figure class="frame" data-id="su03" tabindex="0" role="button" aria-label="Folie 12 präsentieren"><div class="screen"><div class="canvas">
+<section id="su03" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/su03-prelude-13-14.png" alt="BWV 1011 und BWV 995, Prélude Takt 13 bis 14" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="fa1c2b1d" style="position:absolute; top:792px; left:184.02px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Volle Akkorde</h2>
+</section>
+</div></div><figcaption>12</figcaption></figure>
+<figure class="frame" data-id="k09" tabindex="0" role="button" aria-label="Folie 13 präsentieren"><div class="screen"><div class="canvas">
+<section id="k09" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <div style="display:flex; flex-direction:row; gap:40px; align-items:start; flex:0 0 auto">
+    <div style="display:flex; flex-direction:column; gap:6px; min-width:min-content">
+      <p style="flex:0 0 auto; font-family:'Public Sans', Arial, sans-serif; font-size:24px; font-weight:600; line-height:1.2; color:#6b7280">Vivaldi, op. 3 Nr. 10 (Ausgabe Keber)</p>
+      <img loading="lazy" src="img/bwv1065_II_b1-7_model.png" alt="Vivaldi RV 580, Largo, Takt 1 bis 7" style="width:827px; height:500px; object-fit:contain">
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px; min-width:min-content">
+      <p style="flex:0 0 auto; font-family:'Public Sans', Arial, sans-serif; font-size:24px; font-weight:600; line-height:1.2; color:#6b7280">Bach, BWV 1065 (BGA 43)</p>
+      <img loading="lazy" src="img/bwv1065_II_b1-6_bach.png" alt="BWV 1065, Largo, Takt 1 bis 6" style="width:813px; height:500px; object-fit:contain">
+    </div>
+  </div>
+  <h2 id="bf8b387a" style="position:absolute; top:816px; left:208.02px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Volle Akkorde</h2>
+</section>
+</div></div><figcaption>13</figcaption></figure>
+<figure class="frame" data-id="fg04" tabindex="0" role="button" aria-label="Folie 14 präsentieren"><div class="screen"><div class="canvas">
+<section id="fg04" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/fg04-episode.png" alt="Fuge, Violine Takt 7 bis 9 mit Laute und Orgel" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="27c669dc" style="position:absolute; top:816px; left:208.02px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Implizite Harmonie</h2>
+</section>
+</div></div><figcaption>14</figcaption></figure>
+<figure class="frame" data-id="fg07" tabindex="0" role="button" aria-label="Folie 15 präsentieren"><div class="screen"><div class="canvas">
+<section id="fg07" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/fg07-arpeggio.png" alt="Fuge, Violine Takt 42 bis 45 mit Laute und Orgel" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="c371107b" style="position:absolute; top:840px; left:232.02px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Implizite Harmonie</h2>
+</section>
+</div></div><figcaption>15</figcaption></figure>
+<figure class="frame" data-id="su08" tabindex="0" role="button" aria-label="Folie 16 präsentieren"><div class="screen"><div class="canvas">
+<section id="su08" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/su08-fugue-63-71.png" alt="BWV 1011 und BWV 995, Fugenteil Takt 63 bis 71" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="cdb2d64c" style="position:absolute; top:888px; left:280.02px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Implizite Harmonie</h2>
+</section>
+</div></div><figcaption>16</figcaption></figure>
+<figure class="frame" data-id="su06" tabindex="0" role="button" aria-label="Folie 17 präsentieren"><div class="screen"><div class="canvas">
+<section id="su06" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/su06-fugue-36-47.png" alt="BWV 1011 und BWV 995, Fugenteil Takt 36 bis 47" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="b72c978d" style="position:absolute; top:864px; left:256.02px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Ergänzter Bass</h2>
+</section>
+</div></div><figcaption>17</figcaption></figure>
+<figure class="frame" data-id="su02" tabindex="0" role="button" aria-label="Folie 18 präsentieren"><div class="screen"><div class="canvas">
+<section id="su02" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/su02-prelude-5-7.png" alt="BWV 1011 und BWV 995, Prélude Takt 5 bis 7" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="e03d21e9" style="position:absolute; top:846.07px; left:50%; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328; transform:translateX(-50%)">Nachschlagender Bass</h2>
+</section>
+</div></div><figcaption>18</figcaption></figure>
+<figure class="frame" data-id="m01" tabindex="0" role="button" aria-label="Folie 19 präsentieren"><div class="screen"><div class="canvas">
+<section id="m01" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <div style="display:flex; flex-direction:column; gap:8px; flex:0 0 auto">
+    <div style="display:flex; flex-direction:column; gap:6px; flex:0 0 auto">
+      <p style="flex:0 0 auto; font-family:'Public Sans', Arial, sans-serif; font-size:24px; font-weight:600; line-height:1.2; color:#6b7280; transform:translate(73px, 32px)">Marcello (Ausgabe Jönsson)</p>
+      <img loading="lazy" src="img/bwv974_I_b1-4_model.png" alt="Marcello, I. Satz, Takt 1 bis 4" style="width:882px; height:438px; flex:0 0 auto; object-fit:contain; transform:translate(-68px, -3px)">
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px; flex:0 0 auto">
+      <p style="flex:0 0 auto; font-family:'Public Sans', Arial, sans-serif; font-size:24px; font-weight:600; line-height:1.2; color:#6b7280; transform:translate(935px, -379px)">Bach, BWV 974 (BGA 42)</p>
+      <img loading="lazy" src="img/bwv974_I_b1-4_bach.png" alt="BWV 974, I. Satz, Takt 1 bis 4" style="width:1018px; height:226px; flex:0 0 auto; transform:translate(782px, -348px)">
+    </div>
+  </div>
+  <h2 id="78079d0c" style="position:absolute; top:870.07px; left:calc(50% + 24px); width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328; transform:translateX(-50%)">Bassverdoppelung</h2>
+</section>
+</div></div><figcaption>19</figcaption></figure>
+<figure class="frame" data-id="fg09" tabindex="0" role="button" aria-label="Folie 20 präsentieren"><div class="screen"><div class="canvas">
+<section id="fg09" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/fg09-bariolage-pedal.png" alt="Fuge, Violine Takt 68 bis 70 mit Laute und Orgel" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="a040ed0f" style="position:absolute; top:792px; left:184.02px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Verdeckte Mehrstimmigkeit</h2>
+  <h2 id="e4f9e252" style="position:absolute; top:910.58px; left:184.01px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Stimmen ergänzen (Hierarchie beachten)</h2>
+</section>
+</div></div><figcaption>20</figcaption></figure>
+<h2 class="part">C · Hinzufügen</h2>
+<figure class="frame" data-id="su11" tabindex="0" role="button" aria-label="Folie 21 präsentieren"><div class="screen"><div class="canvas">
+<section id="su11" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/su11-fugue-149-154.png" alt="BWV 1011 und BWV 995, Fugenteil Takt 149 bis 154" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="23d845d9" style="position:absolute; top:897.99px; left:160.03px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Sexten/Terzen ergänzen</h2>
+</section>
+</div></div><figcaption>21</figcaption></figure>
+<figure class="frame" data-id="v03" tabindex="0" role="button" aria-label="Folie 22 präsentieren"><div class="screen"><div class="canvas">
+<section id="v03" class="instance">
+<div class="side">
+<div class="col"><p class="lbl">Vivaldi, op. 3 Nr. 9 (Ausgabe Keber)</p><img loading="lazy" src="img/bwv972_I_b25-28_model.png" alt="Vivaldi RV 230, I. Satz, Takt 25 bis 28" style="width:647px; height:534px; flex:0 0 auto; object-fit:contain"></div>
+<div class="col"><p class="lbl">Bach, BWV 972 (BGA 42)</p><img loading="lazy" src="img/bwv972_I_b25-28_bach.png" alt="BWV 972, I. Satz, Takt 25 bis 30" style="width:1057px;height:358px"></div>
+</div>
+<h2 id="e5498756" style="box-sizing:border-box; position:absolute; top:921.99px; left:184.03px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Verbindungsstücke/Auftakte</h2>
+</section>
+</div></div><figcaption>22</figcaption></figure>
+<figure class="frame" data-id="v09" tabindex="0" role="button" aria-label="Folie 23 präsentieren"><div class="screen"><div class="canvas">
+<section id="v09" class="instance">
+<div class="side">
+<div class="col"><p class="lbl">Vivaldi, op. 3 Nr. 9 (Ausgabe Keber)</p><img loading="lazy" src="img/bwv972_III_b51-57_model.png" alt="Vivaldi RV 230, III. Satz, Takt 45 bis 58" style="width:358px;height:469px"></div>
+<div class="col"><p class="lbl">Bach, BWV 972 (BGA 42)</p><img loading="lazy" src="img/bwv972_III_b51-57_bach.png" alt="BWV 972, III. Satz, Takt 47 bis 59" style="width:1282px;height:469px"></div>
+</div>
+<h2 id="eedeac1c" style="box-sizing:border-box;position:absolute;top:946px;left:208px;width:1680px;font-family:'EB Garamond', Georgia, serif;font-size:72px;font-weight:600;line-height:1.05;color:#1f2328">Vollstimmigkeit/Zerlegungen</h2>
+</section>
+</div></div><figcaption>23</figcaption></figure>
+<figure class="frame" data-id="fg10" tabindex="0" role="button" aria-label="Folie 24 präsentieren"><div class="screen"><div class="canvas">
+<section id="fg10" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/fg10-pedalmotif.png" alt="Fuge, Violine Takt 19 bis 20 mit Orgel" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="8df05936" style="position:absolute; top:970px; left:232px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Neuer Kontrapunkt</h2>
+</section>
+</div></div><figcaption>24</figcaption></figure>
+<figure class="frame" data-id="o12" tabindex="0" role="button" aria-label="Folie 25 präsentieren"><div class="screen"><div class="canvas">
+<section id="o12" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <div style="display:flex; flex-direction:row; gap:40px; align-items:start; flex:0 0 auto">
+    <div style="display:flex; flex-direction:column; gap:6px; min-width:min-content">
+      <p style="flex:0 0 auto; font-family:'Public Sans', Arial, sans-serif; font-size:24px; font-weight:600; line-height:1.2; color:#6b7280">Vivaldi, op. 3 Nr. 8 (Ausgabe Keber)</p>
+      <img loading="lazy" src="img/bwv593_III_b128-137_model.png" alt="Vivaldi RV 522, III. Satz, Takt 128 bis 141" style="width:423px; height:532px; object-fit:contain">
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px; min-width:min-content">
+      <p style="flex:0 0 auto; font-family:'Public Sans', Arial, sans-serif; font-size:24px; font-weight:600; line-height:1.2; color:#6b7280">Bach, BWV 593 (BGA 38)</p>
+      <img loading="lazy" src="img/bwv593_III_b128-137_bach.png" alt="BWV 593, III. Satz, Takt 125 bis 137" style="width:793px; height:532px; object-fit:contain">
+    </div>
+  </div>
+  <h2 id="84e883bb" style="position:absolute; top:970px; left:232px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Neuer Kontrapunkt/Vollstimmigkeit</h2>
+</section>
+</div></div><figcaption>25</figcaption></figure>
+<figure class="frame" data-id="fg02" tabindex="0" role="button" aria-label="Folie 26 präsentieren"><div class="screen"><div class="canvas">
+<section id="fg02" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/fg02-entries.png" alt="Fuge, Violine Takt 4 bis 6 mit Laute und Orgel" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="98e4162a" style="position:absolute; top:829.21px; left:165.32px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Neue Themeneinsätze</h2>
+</section>
+</div></div><figcaption>26</figcaption></figure>
+<figure class="frame" data-id="fg11" tabindex="0" role="button" aria-label="Folie 27 präsentieren"><div class="screen"><div class="canvas">
+<section id="fg11" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/fg11-pedalentry.png" alt="Fuge, Violine Takt 28 bis 29 mit Orgel" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="97e0613c" style="position:absolute; top:853.21px; left:189.32px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Neue Themeneinsätze</h2>
+</section>
+</div></div><figcaption>27</figcaption></figure>
+<figure class="frame" data-id="ad02" tabindex="0" role="button" aria-label="Folie 28 präsentieren"><div class="screen"><div class="canvas">
+<section id="ad02" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/ad02-5-10.png" alt="Marcello und BWV 974, Adagio Takt 5 bis 10" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="4aa7e68c" style="position:absolute; top:853.21px; left:189.32px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Umharmonisierung</h2>
+</section>
+</div></div><figcaption>28</figcaption></figure>
+<figure class="frame" data-id="m06" tabindex="0" role="button" aria-label="Folie 29 präsentieren"><div class="screen"><div class="canvas">
+<section id="m06" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <div style="display:flex; flex-direction:row; gap:40px; align-items:start; flex:0 0 auto">
+    <div style="display:flex; flex-direction:column; gap:6px; min-width:min-content">
+      <p style="flex:0 0 auto; font-family:'Public Sans', Arial, sans-serif; font-size:24px; font-weight:600; line-height:1.2; color:#6b7280">Marcello (Ausgabe Jönsson)</p>
+      <img loading="lazy" src="img/bwv974_I_b50-55_model.png" alt="Marcello, I. Satz, Takt 55 bis 61" style="width:455px; height:394px; object-fit:contain">
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px; min-width:min-content">
+      <p style="flex:0 0 auto; font-family:'Public Sans', Arial, sans-serif; font-size:24px; font-weight:600; line-height:1.2; color:#6b7280">Bach, BWV 974 (BGA 42)</p>
+      <img loading="lazy" src="img/bwv974_I_b50-55_bach.png" alt="BWV 974, I. Satz, Takt 50 bis 55" style="width:1185px; height:394px; object-fit:contain">
+    </div>
+  </div>
+  <h2 id="f07f21c4" style="position:absolute; top:877.21px; left:213.32px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Vollstimmigkeit im Schlussakkord</h2>
+</section>
+</div></div><figcaption>29</figcaption></figure>
+<figure class="frame" data-id="ad06" tabindex="0" role="button" aria-label="Folie 30 präsentieren"><div class="screen"><div class="canvas">
+<section id="ad06" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/ad06-29-31.png" alt="Marcello und BWV 974, Adagio Takt 29 bis 31" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="0c5061cf" style="position:absolute; top:901.21px; left:237.32px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Bewegte Mittelstimmen</h2>
+</section>
+</div></div><figcaption>30</figcaption></figure>
+<h2 class="part">D · Klang und Abklingen</h2>
+<figure class="frame" data-id="fg05" tabindex="0" role="button" aria-label="Folie 31 präsentieren"><div class="screen"><div class="canvas">
+<section id="fg05" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/fg05-longnotes.png" alt="Fuge, Violine Takt 35 bis 37 mit Laute und Orgel" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="f1985ca1" style="position:absolute; top:925.21px; left:261.32px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Neuanschlagen</h2>
+</section>
+</div></div><figcaption>31</figcaption></figure>
+<figure class="frame" data-id="su12" tabindex="0" role="button" aria-label="Folie 32 präsentieren"><div class="screen"><div class="canvas">
+<section id="su12" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/su12-fugue-170-179.png" alt="BWV 1011 und BWV 995, Fugenteil Takt 170 bis 179" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="ebbe9235" style="position:absolute; top:949.21px; left:285.32px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Neuanschlagen</h2>
+</section>
+</div></div><figcaption>32</figcaption></figure>
+<figure class="frame" data-id="su13" tabindex="0" role="button" aria-label="Folie 33 präsentieren"><div class="screen"><div class="canvas">
+<section id="su13" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/su13-fugue-208-215.png" alt="BWV 1011 und BWV 995, Fugenteil Takt 208 bis 215" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="2599890e" style="position:absolute; right:0; bottom:128px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Neuanschlagen</h2>
+</section>
+</div></div><figcaption>33</figcaption></figure>
+<figure class="frame" data-id="fg06" tabindex="0" role="button" aria-label="Folie 34 präsentieren"><div class="screen"><div class="canvas">
+<section id="fg06" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/fg06-pedal.png" alt="Fuge, Violine Takt 38 bis 41 mit Laute und Orgel" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="10dbfd45" style="position:absolute; right:0; bottom:104px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Neuanschlagen</h2>
+</section>
+</div></div><figcaption>34</figcaption></figure>
+<figure class="frame" data-id="su10" tabindex="0" role="button" aria-label="Folie 35 präsentieren"><div class="screen"><div class="canvas">
+<section id="su10" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/su10-fugue-137-143.png" alt="BWV 1011 und BWV 995, Fugenteil Takt 137 bis 143" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="7021b33d" style="position:absolute; right:0; bottom:104px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Vollstimmigkeit/Neuer Bass</h2>
+</section>
+</div></div><figcaption>35</figcaption></figure>
+<figure class="frame" data-id="v02" tabindex="0" role="button" aria-label="Folie 36 präsentieren"><div class="screen"><div class="canvas">
+<section id="v02" class="instance">
+<div class="side">
+<div class="col"><p class="lbl">Vivaldi, op. 3 Nr. 9 (Ausgabe Keber)</p><img loading="lazy" src="img/bwv972_I_b9-15_model.png" alt="Vivaldi RV 230, I. Satz, Takt 9 bis 15" style="width:542px;height:782px;flex:0 0 auto;transform:translate(-69px, 0);box-sizing:border-box"></div>
+<div class="col"><p class="lbl">Bach, BWV 972 (BGA 42)</p><img loading="lazy" src="img/bwv972_I_b9-15_bach.png" alt="BWV 972, I. Satz, Takt 9 bis 15" style="width:1304px;height:442px;transform:translate(-53px, -3px)"></div>
+</div>
+<h2 id="c3c02fa7" style="box-sizing:border-box; position:absolute; right:0; bottom:80px; width:1680px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Brechungen</h2>
+</section>
+</div></div><figcaption>36</figcaption></figure>
+<figure class="frame" data-id="v04" tabindex="0" role="button" aria-label="Folie 37 präsentieren"><div class="screen"><div class="canvas">
+<section id="v04" class="instance">
+<div class="side">
+<div class="col"><p class="lbl">Vivaldi, op. 3 Nr. 9 (Ausgabe Keber)</p><img loading="lazy" src="img/bwv972_I_b29-33_model.png" alt="Vivaldi RV 230, I. Satz, Takt 29 bis 34" style="width:528px; height:796px; flex:0 0 auto; object-fit:contain"></div>
+<div class="col"><p class="lbl">Bach, BWV 972 (BGA 42)</p><img loading="lazy" src="img/bwv972_I_b29-33_bach.png" alt="BWV 972, I. Satz, Takt 28 bis 33" style="width:1310px;height:435px"></div>
+</div>
+<h2 id="9b93b944" style="position:absolute;font-family:'EB Garamond', Georgia, serif;font-size:72px;font-weight:600;line-height:1.05;color:#1f2328;right:728px;bottom:185px;width:411px;height:87px;box-sizing:border-box">Brechungen</h2>
+</section>
+</div></div><figcaption>37</figcaption></figure>
+<figure class="frame" data-id="cedfb5a1" tabindex="0" role="button" aria-label="Folie 38 präsentieren"><div class="screen"><div class="canvas">
+<section id="cedfb5a1" class="instance">
+<img loading="lazy" class="score" src="img/su14-allemande-1-2.png" alt="BWV 1011 und BWV 995, Allemande Takt 1 bis 2">
+<h2 id="9cf3abb2" style="position:absolute;font-family:'EB Garamond', Georgia, serif;font-size:72px;font-weight:600;line-height:1.05;color:#1f2328;right:1052px;bottom:194px;width:712px;height:97px;box-sizing:border-box">rhythmisches Stauchen</h2>
+</section>
+</div></div><figcaption>38</figcaption></figure>
+<figure class="frame" data-id="v08" tabindex="0" role="button" aria-label="Folie 39 präsentieren"><div class="screen"><div class="canvas">
+<section id="v08" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <div style="display:flex; flex-direction:row; gap:40px; align-items:start; flex:0 0 auto">
+    <div style="display:flex; flex-direction:column; gap:6px; min-width:min-content">
+      <p style="flex:0 0 auto; font-family:'Public Sans', Arial, sans-serif; font-size:24px; font-weight:600; line-height:1.2; color:#6b7280">Vivaldi, op. 3 Nr. 9 (Ausgabe Keber)</p>
+      <div class="crop" style="width:772px; height:710px; flex:0 0 auto; transform:translate(-52px, 0)"><img loading="lazy" src="img/bwv972_III_b9-20_model.png" alt="Vivaldi RV 230, III. Satz, Takt 9 bis 23" style="width:146.42%;height:146.42%;left:-0.0%;top:-0.0%;object-position:0.0% 0.0%"></div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px; min-width:min-content">
+      <p style="flex:0 0 auto; font-family:'Public Sans', Arial, sans-serif; font-size:24px; font-weight:600; line-height:1.2; color:#6b7280; transform:translate(-7px, 76px)">Bach, BWV 972 (BGA 42)</p>
+      <div class="crop" style="width:1034px; height:231.32px; flex:0 0 auto; transform:translate(-46px, 74px)"><img loading="lazy" src="img/bwv972_III_b9-20_bach.png" alt="BWV 972, III. Satz, Takt 9 bis 20" style="width:112.18%;height:112.18%;left:-4.6893%;top:-0.0%;object-position:38.5% 0.0%"></div>
+    </div>
+  </div>
+  <h2 id="0b73f69e" style="position:absolute; right:128px; bottom:57.32px; width:1612.38px; height:99.72px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">gebrochene Figuren &lt;=&gt; Repetition</h2>
+</section>
+</div></div><figcaption>39</figcaption></figure>
+<figure class="frame" data-id="m08" tabindex="0" role="button" aria-label="Folie 40 präsentieren"><div class="screen"><div class="canvas">
+<section id="m08" class="instance">
+<div class="side">
+<div class="col"><p class="lbl" style="transform:translate(-74px, 97px)">Marcello (Ausgabe Jönsson)</p><img loading="lazy" src="img/bwv974_III_b14-27_model.png" alt="Marcello, III. Satz, Takt 9 bis 26" style="transform:translate(-120px, 0);width:733px;height:832px;box-sizing:border-box;flex:0 0 auto"></div>
+<div class="col"><p class="lbl" style="transform:translate(-49px, 56px)">Bach, BWV 974 (BGA 42)</p><img loading="lazy" src="img/bwv974_III_b14-27_bach.png" alt="BWV 974, III. Satz, Takt 14 bis 27" style="width:1182px;height:389px;transform:translate(-134px, 62px)"></div>
+</div>
+<h2 id="9f587b8b" style="box-sizing:border-box;position:absolute;right:104px;bottom:33px;width:1612px;height:100px;font-family:'EB Garamond', Georgia, serif;font-size:72px;font-weight:600;line-height:1.05;color:#1f2328">Gebrochener/figurierter Bass, Auftaktfigur zwischen Phrasen</h2>
+</section>
+</div></div><figcaption>40</figcaption></figure>
+<figure class="frame" data-id="o02" tabindex="0" role="button" aria-label="Folie 41 präsentieren"><div class="screen"><div class="canvas">
+<section id="o02" class="instance">
+<div class="side">
+<div class="col"><p class="lbl">Vivaldi, op. 3 Nr. 8 (Ausgabe Keber)</p><img loading="lazy" src="img/bwv593_I_b30-33_model.png" alt="Vivaldi RV 522, I. Satz, Takt 29 bis 34" style="width:624px;height:817px;flex:0 0 auto;box-sizing:border-box"></div>
+<div class="col"><p class="lbl">Bach, BWV 593 (BGA 38)</p><img loading="lazy" src="img/bwv593_I_b30-33_bach.png" alt="BWV 593, I. Satz, Takt 28 bis 33" style="width:1167px;height:532px;transform:translate(-53px, 7px)"></div>
+</div>
+<h2 id="815810c7" style="box-sizing:border-box;position:absolute;right:80px;bottom:9px;width:1612px;height:100px;font-family:'EB Garamond', Georgia, serif;font-size:72px;font-weight:600;line-height:1.05;color:#1f2328">Gebrochener Bass</h2>
+</section>
+</div></div><figcaption>41</figcaption></figure>
+<figure class="frame" data-id="o05" tabindex="0" role="button" aria-label="Folie 42 präsentieren"><div class="screen"><div class="canvas">
+<section id="o05" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <div style="display:flex; flex-direction:column; gap:8px; flex:0 0 auto">
+    <div style="display:flex; flex-direction:column; gap:6px; flex:0 0 auto">
+      <p style="width:407px; flex:0 0 auto; font-family:'Public Sans', Arial, sans-serif; font-size:24px; font-weight:600; line-height:1.2; color:#6b7280; transform:translate(425px, 45px)">Vivaldi, op. 3 Nr. 8 (Ausgabe Keber)</p>
+      <div class="crop" style="width:1369px; height:136px; flex:0 0 auto; transform:translate(359px, 12px)"><img loading="lazy" src="img/bwv593_I_b72-74_model.png" alt="Vivaldi RV 522, I. Satz, Takt 72 bis 74" style="width:100.01%;height:100.01%;left:-0.005%;top:-0.0%;object-position:50.0% 0.0%"></div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px; flex:0 0 auto">
+      <p style="width:304px; flex:0 0 auto; min-height:36px; font-family:'Public Sans', Arial, sans-serif; font-size:24px; font-weight:600; line-height:1.2; color:#6b7280; transform:translate(432px, 179px)">Bach, BWV 593 (BGA 38)</p>
+      <div class="crop" style="width:1349px; height:92.89px; flex:0 0 auto; transform:translate(331px, 192px)"><img loading="lazy" src="img/bwv593_I_b72-74_bach.png" alt="BWV 593, I. Satz, Takt 72 bis 74" style="width:105.64%;height:105.64%;left:-0.3525%;top:-3.2627%;object-position:6.25% 57.849%"></div>
+    </div>
+  </div>
+  <h2 id="f4f00b49" style="position:absolute; right:56px; bottom:96px; width:1612px; height:100px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Idiomatische Brechungen</h2>
+</section>
+</div></div><figcaption>42</figcaption></figure>
+<figure class="frame" data-id="v10" tabindex="0" role="button" aria-label="Folie 43 präsentieren"><div class="screen"><div class="canvas">
+<section id="v10" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <div style="display:flex; flex-direction:row; gap:40px; align-items:start; flex:0 0 auto">
+    <div style="display:flex; flex-direction:column; gap:6px; min-width:min-content">
+      <p style="width:428px; flex:0 0 auto; font-family:'Public Sans', Arial, sans-serif; font-size:24px; font-weight:600; line-height:1.2; color:#6b7280; transform:translate(234px, 78px)">Vivaldi, op. 3 Nr. 9 (Ausgabe Keber)</p>
+      <div class="crop" style="width:894.14px; height:127.81px; flex:0 0 auto; transform:translate(215px, 72px)"><img loading="lazy" src="img/bwv972_III_b58-64_model.png" alt="Vivaldi RV 230, III. Satz, Takt 52 bis 62" style="width:155.11%;height:155.11%;left:-49.2529%;top:-30.4202%;object-position:89.372% 55.199%"></div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px; min-width:min-content">
+      <p style="flex:0 0 auto; font-family:'Public Sans', Arial, sans-serif; font-size:24px; font-weight:600; line-height:1.2; color:#6b7280; transform:translate(-731px, 312px)">Bach, BWV 972 (BGA 42)</p>
+      <div class="crop" style="width:990.75px; height:149px; flex:0 0 auto; transform:translate(-853px, 314px)"><img loading="lazy" src="img/bwv972_III_b58-64_bach.png" alt="BWV 972, III. Satz, Takt 54 bis 64" style="width:165.58%;height:165.58%;left:-0.1489%;top:-45.7198%;object-position:0.227% 69.716%"></div>
+    </div>
+  </div>
+  <h2 id="8f820a09" style="position:absolute; right:32px; bottom:72px; width:1612px; height:100px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Idiomatische Brechungen</h2>
+</section>
+</div></div><figcaption>43</figcaption></figure>
+<h2 class="part">E · Verzierung und Rhythmus</h2>
+<figure class="frame" data-id="fg12" tabindex="0" role="button" aria-label="Folie 44 präsentieren"><div class="screen"><div class="canvas">
+<section id="fg12" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/fg12-ornaments.png" alt="Fuge, Violine Takt 22 bis 24 mit Laute" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="66c98e2b" style="position:absolute; right:8px; bottom:48px; width:1612px; height:100px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Verzieren</h2>
+</section>
+</div></div><figcaption>44</figcaption></figure>
+<figure class="frame" data-id="su04" tabindex="0" role="button" aria-label="Folie 45 präsentieren"><div class="screen"><div class="canvas">
+<section id="su04" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/su04-prelude-25-26.png" alt="BWV 1011 und BWV 995, Prélude Takt 25 bis 26" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="033793d7" style="position:absolute; right:0; bottom:24px; width:1612px; height:100px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Verzieren</h2>
+</section>
+</div></div><figcaption>45</figcaption></figure>
+<figure class="frame" data-id="ad03" tabindex="0" role="button" aria-label="Folie 46 präsentieren"><div class="screen"><div class="canvas">
+<section id="ad03" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/ad03-10-12.png" alt="Marcello und BWV 974, Adagio Takt 10 bis 12" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="657517a5" style="position:absolute; right:0; bottom:0; width:1612px; height:100px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Diminuieren</h2>
+</section>
+</div></div><figcaption>46</figcaption></figure>
+<figure class="frame" data-id="ad05" tabindex="0" role="button" aria-label="Folie 47 präsentieren"><div class="screen"><div class="canvas">
+<section id="ad05" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/ad05-24-26.png" alt="Marcello und BWV 974, Adagio Takt 24 bis 26" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="ade47214" style="position:absolute; right:0; bottom:0; width:1612px; height:100px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Diminuieren</h2>
+</section>
+</div></div><figcaption>47</figcaption></figure>
+<figure class="frame" data-id="m02" tabindex="0" role="button" aria-label="Folie 48 präsentieren"><div class="screen"><div class="canvas">
+<section id="m02" class="instance">
+<div class="stack">
+<div class="col"><p class="lbl">Marcello (Ausgabe Jönsson), Takte 5–8</p><img loading="lazy" src="img/bwv974_I_b5-7_model.png" alt="Marcello, I. Satz, Takt 5 bis 8" style="width:1240px;height:515px;flex:0 0 auto;box-sizing:border-box"></div>
+<div class="col"><p class="lbl">Bach, BWV 974 (BGA 42)</p><img loading="lazy" src="img/bwv974_I_b5-7_bach.png" alt="BWV 974, I. Satz, Takt 5 bis 7" style="width:1331px; height:260px; flex:0 0 auto; object-fit:contain"></div>
+</div>
+<h2 id="68b764ab" style="box-sizing:border-box; position:absolute; right:0; bottom:0; width:1612px; height:100px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Sprünge &lt;=&gt; Akkordbrechungen</h2>
+</section>
+</div></div><figcaption>48</figcaption></figure>
+<figure class="frame" data-id="su14" tabindex="0" role="button" aria-label="Folie 49 präsentieren"><div class="screen"><div class="canvas">
+<section id="su14" class="instance">
+<img loading="lazy" class="score" src="img/su14-allemande-1-2.png" alt="BWV 1011 und BWV 995, Allemande Takt 1 bis 2">
+<h2 id="75cae2e9" style="box-sizing:border-box;position:absolute;right:0;bottom:0;width:1612px;height:100px;font-family:'EB Garamond', Georgia, serif;font-size:72px;font-weight:600;line-height:1.05;color:#1f2328">Rhythmisches Stauchen</h2>
+</section>
+</div></div><figcaption>49</figcaption></figure>
+<figure class="frame" data-id="su15" tabindex="0" role="button" aria-label="Folie 50 präsentieren"><div class="screen"><div class="canvas">
+<section id="su15" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/su15-allemande-6-7.png" alt="BWV 1011 und BWV 995, Allemande Takt 6 bis 7" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="924e0b6e" style="position:absolute; right:0; bottom:0; width:1612px; height:100px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Rhythmisches Stauchen</h2>
+</section>
+</div></div><figcaption>50</figcaption></figure>
+<figure class="frame" data-id="su16" tabindex="0" role="button" aria-label="Folie 51 präsentieren"><div class="screen"><div class="canvas">
+<section id="su16" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/su16-allemande-19-23.png" alt="BWV 1011 und BWV 995, Allemande Takt 19 bis 23" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="66987fb5" style="position:absolute; right:0; bottom:0; width:1612px; height:100px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Rhythmisches Stauchen</h2>
+</section>
+</div></div><figcaption>51</figcaption></figure>
+<figure class="frame" data-id="su05" tabindex="0" role="button" aria-label="Folie 52 präsentieren"><div class="screen"><div class="canvas">
+<section id="su05" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <img loading="lazy" src="img/su05-fugue-26-31.png" alt="BWV 1011 und BWV 995, Prélude Takt 26 bis 31" style="width:1680px; height:560px; object-fit:contain">
+  <h2 id="14ec880f" style="position:absolute; right:0; bottom:0; width:1612px; height:100px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Rhythmisches Stauchen</h2>
+</section>
+</div></div><figcaption>52</figcaption></figure>
+<h2 class="part">F · Ensemble: Orchester zusammenziehen und hinzufügen</h2>
+<figure class="frame" data-id="s01" tabindex="0" role="button" aria-label="Folie 53 präsentieren"><div class="screen"><div class="canvas">
+<section id="s01" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <div style="display:flex; flex-direction:row; gap:40px; align-items:start; flex:0 0 auto">
+    <div style="display:flex; flex-direction:column; gap:6px; min-width:min-content">
+      <p style="flex:0 0 auto; font-family:'Public Sans', Arial, sans-serif; font-size:24px; font-weight:600; line-height:1.2; color:#6b7280">Violine, BWV 1006 (Autograph P 967)</p>
+      <img loading="lazy" src="img/bwv29_b1-5_model.png" alt="BWV 1006, Preludio, Takt 1 bis 5" style="width:826px; height:106px; object-fit:contain">
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px; min-width:min-content">
+      <p style="flex:0 0 auto; font-family:'Public Sans', Arial, sans-serif; font-size:24px; font-weight:600; line-height:1.2; color:#6b7280">Sinfonia, BWV 29 (BGA 5)</p>
+      <img loading="lazy" src="img/bwv29_b1-5_bach.png" alt="BWV 29, Sinfonia, Takt 1 bis 5" style="width:814px; height:532px; object-fit:contain">
+    </div>
+  </div>
+  <h2 id="934ee8ad" style="position:absolute; bottom:260.61px; left:calc(50% - 89.57px); width:1436.82px; height:154.11px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328; transform:translateX(-50%)">Orchestrales Unisono/Verdoppeln von Läufen und<br>Brechungen</h2>
+  <h2 id="fec285e8" style="position:absolute; bottom:61.44px; left:calc(50% - 89.56px); width:1436.82px; height:154.11px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328; transform:translateX(-50%)">Neue Motive aus Solostimme gewinnen</h2>
+</section>
+</div></div><figcaption>53</figcaption></figure>
+<figure class="frame" data-id="s02" tabindex="0" role="button" aria-label="Folie 54 präsentieren"><div class="screen"><div class="canvas">
+<section id="s02" class="instance">
+<div class="side">
+<div class="col"><p class="lbl">Violine, BWV 1006 (Autograph P 967)</p><img loading="lazy" src="img/bwv29_b6-11_model.png" alt="BWV 1006, Preludio, Takt 6 bis 11" style="width:778px;height:112px"></div>
+<div class="col"><p class="lbl">Sinfonia, BWV 29 (BGA 5)</p><img loading="lazy" src="img/bwv29_b6-11_bach.png" alt="BWV 29, Sinfonia, Takt 6 bis 11" style="width:862px;height:532px"></div>
+</div>
+</section>
+</div></div><figcaption>54</figcaption></figure>
+<figure class="frame" data-id="s04" tabindex="0" role="button" aria-label="Folie 55 präsentieren"><div class="screen"><div class="canvas">
+<section id="s04" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <div style="display:flex; flex-direction:row; gap:40px; align-items:start; flex:0 0 auto">
+    <div style="display:flex; flex-direction:column; gap:6px; min-width:min-content">
+      <p style="flex:0 0 auto; font-family:'Public Sans', Arial, sans-serif; font-size:24px; font-weight:600; line-height:1.2; color:#6b7280">Violine, BWV 1006 (Autograph P 967)</p>
+      <img loading="lazy" src="img/bwv29_b18-23_model.png" alt="BWV 1006, Preludio, Takt 17 bis 25" style="width:858px; height:217px; object-fit:contain">
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px; min-width:min-content">
+      <p style="flex:0 0 auto; font-family:'Public Sans', Arial, sans-serif; font-size:24px; font-weight:600; line-height:1.2; color:#6b7280">Sinfonia, BWV 29 (BGA 5)</p>
+      <img loading="lazy" src="img/bwv29_b18-23_bach.png" alt="BWV 29, Sinfonia, Takt 18 bis 23" style="width:782px; height:532px; object-fit:contain">
+    </div>
+  </div>
+  <h2 id="66f6683d" style="position:absolute; right:0; bottom:0; width:1612px; height:100px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Generalbassbegleitung + Streicher</h2>
+</section>
+</div></div><figcaption>55</figcaption></figure>
+<figure class="frame" data-id="s05" tabindex="0" role="button" aria-label="Folie 56 präsentieren"><div class="screen"><div class="canvas">
+<section id="s05" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <div style="display:flex; flex-direction:row; gap:40px; align-items:start; flex:0 0 auto">
+    <div style="display:flex; flex-direction:column; gap:6px; min-width:min-content">
+      <p style="flex:0 0 auto; font-family:'Public Sans', Arial, sans-serif; font-size:24px; font-weight:600; line-height:1.2; color:#6b7280">Violine, BWV 1006 (Autograph P 967)</p>
+      <img loading="lazy" src="img/bwv29_b30-34_model.png" alt="BWV 1006, Preludio, Takt 26 bis 35" style="width:842px; height:214px; object-fit:contain">
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px; min-width:min-content">
+      <p style="flex:0 0 auto; font-family:'Public Sans', Arial, sans-serif; font-size:24px; font-weight:600; line-height:1.2; color:#6b7280">Sinfonia, BWV 29 (BGA 5)</p>
+      <img loading="lazy" src="img/bwv29_b30-34_bach.png" alt="BWV 29, Sinfonia, Takt 30 bis 34" style="width:798px; height:532px; object-fit:contain">
+    </div>
+  </div>
+  <h2 id="e94985f7" style="position:absolute; right:0; bottom:0; width:1612px; height:100px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Gehalene Töne</h2>
+</section>
+</div></div><figcaption>56</figcaption></figure>
+<figure class="frame" data-id="s08" tabindex="0" role="button" aria-label="Folie 57 präsentieren"><div class="screen"><div class="canvas">
+<section id="s08" data-flat style="display:flex; flex-direction:column; gap:18px; padding:96px 120px 88px; background:#ffffff">
+  <div style="display:flex; flex-direction:row; gap:40px; align-items:start; flex:0 0 auto">
+    <div style="display:flex; flex-direction:column; gap:6px; min-width:min-content">
+      <p style="flex:0 0 auto; font-family:'Public Sans', Arial, sans-serif; font-size:24px; font-weight:600; line-height:1.2; color:#6b7280">Violine, BWV 1006 (Autograph P 967)</p>
+      <img loading="lazy" src="img/bwv29_b95-99_model.png" alt="BWV 1006, Preludio, Takt 94 bis 99" style="width:863px; height:216px; object-fit:contain">
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px; min-width:min-content">
+      <p style="flex:0 0 auto; font-family:'Public Sans', Arial, sans-serif; font-size:24px; font-weight:600; line-height:1.2; color:#6b7280">Sinfonia, BWV 29 (BGA 5)</p>
+      <img loading="lazy" src="img/bwv29_b95-99_bach.png" alt="BWV 29, Sinfonia, Takt 95 bis 99" style="width:777px; height:532px; object-fit:contain">
+    </div>
+  </div>
+  <h2 id="97d449d3" style="position:absolute; right:0; bottom:0; width:1612px; height:100px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Begleitung nur in Streichern</h2>
+</section>
+</div></div><figcaption>57</figcaption></figure>
+<figure class="frame" data-id="s09" tabindex="0" role="button" aria-label="Folie 58 präsentieren"><div class="screen"><div class="canvas">
+<section id="s09" class="instance">
+<div class="side">
+<div class="col"><p class="lbl">Violine, BWV 1006 (Autograph P 967)</p><img loading="lazy" src="img/bwv29_b127-132_model.png" alt="BWV 1006, Preludio, Takt 127 bis 137" style="width:874px;height:213px"></div>
+<div class="col"><p class="lbl">Sinfonia, BWV 29 (BGA 5)</p><img loading="lazy" src="img/bwv29_b127-132_bach.png" alt="BWV 29, Sinfonia, Takt 127 bis 132" style="width:766px;height:532px"></div>
+</div>
+<h2 id="cfa2ab85" style="box-sizing:border-box; position:absolute; right:55.42px; bottom:111.83px; width:1612px; height:100px; font-family:'EB Garamond', Georgia, serif; font-size:72px; font-weight:600; line-height:1.05; color:#1f2328">Trompeten und Pauken gliedern Form<br>(wo tutti, wo solo)</h2>
+</section>
+</div></div><figcaption>58</figcaption></figure>
+</main>
+<div class="stage" id="stage" tabindex="-1" hidden>
+  <div class="stage-screen"><div class="canvas" id="stage-canvas"></div></div>
+  <div class="stage-bar">
+    <button id="prev" aria-label="Vorige Folie">‹</button>
+    <span id="count"></span>
+    <button id="next" aria-label="Nächste Folie">›</button>
+    <button id="close" aria-label="Präsentation beenden">×</button>
+  </div>
+</div>
+<script>
+const W = 1920, H = 1080;
+const root = document.documentElement;
+const frames = [...document.querySelectorAll('.frame')];
+const stage = document.getElementById('stage');
+const stageCanvas = document.getElementById('stage-canvas');
+const count = document.getElementById('count');
+const STEPS = { ArrowRight: 1, ArrowDown: 1, PageDown: 1, ' ': 1, Enter: 1, ArrowLeft: -1, ArrowUp: -1, PageUp: -1, Backspace: -1 };
+
+const fitList = () => root.style.setProperty('--s', frames[0].querySelector('.screen').clientWidth / W);
+const fitStage = () => root.style.setProperty('--stage-s', Math.min(innerWidth / W, innerHeight / H));
+const clamp = i => Math.max(0, Math.min(frames.length - 1, i));
+const frameIndex = id => frames.findIndex(f => f.dataset.id === id);
+const firstVisible = () => Math.max(0, frames.findIndex(f => f.getBoundingClientRect().bottom > 80));
+
+// The stage shows a copy of the slide; its ids stay unique on the page.
+function withoutIds(node) {
+  node.removeAttribute('id');
+  node.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
+  return node;
+}
+
+const state = { current: 0, idle: 0 };
+
+function show(i) {
+  state.current = clamp(i);
+  stageCanvas.replaceChildren(withoutIds(frames[state.current].querySelector('section').cloneNode(true)));
+  count.textContent = `${state.current + 1} / ${frames.length}`;
+  history.replaceState(null, '', `#${frames[state.current].dataset.id}`);
+}
+
+function present(i) {
+  fitStage();
+  stage.hidden = false;
+  show(i);
+  stage.focus();
+  stage.requestFullscreen?.().catch(() => {});
+}
+
+function closeStage() {
+  if (stage.hidden) return;
+  stage.hidden = true;
+  if (document.fullscreenElement) document.exitFullscreen();
+  frames[state.current].scrollIntoView({ block: 'center' });
+  frames[state.current].focus({ preventScroll: true });
+}
+
+function wake() {
+  stage.classList.add('awake');
+  clearTimeout(state.idle);
+  state.idle = setTimeout(() => stage.classList.remove('awake'), 1800);
+}
+
+function onKey(e) {
+  if (stage.hidden) {
+    const frame = e.target.closest?.('.frame');
+    if (frame && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); present(frames.indexOf(frame)); }
+    return;
+  }
+  if (e.key === 'Escape') return closeStage();
+  if (e.key === 'Home' || e.key === 'End') { e.preventDefault(); return show(e.key === 'Home' ? 0 : frames.length - 1); }
+  if (STEPS[e.key]) { e.preventDefault(); show(state.current + STEPS[e.key]); }
+}
+
+function swipe(el, onStep) {
+  const start = { x: 0 };
+  el.addEventListener('pointerdown', e => { start.x = e.clientX; });
+  el.addEventListener('pointerup', e => {
+    const dx = e.clientX - start.x;
+    onStep(Math.abs(dx) > 40 ? (dx < 0 ? 1 : -1) : 1);
+  });
+}
+
+frames.forEach((f, i) => f.addEventListener('click', () => present(i)));
+document.getElementById('present').addEventListener('click', () => present(firstVisible()));
+document.getElementById('prev').addEventListener('click', () => show(state.current - 1));
+document.getElementById('next').addEventListener('click', () => show(state.current + 1));
+document.getElementById('close').addEventListener('click', closeStage);
+swipe(stage.querySelector('.stage-screen'), step => show(state.current + step));
+stage.addEventListener('pointermove', wake);
+document.addEventListener('keydown', onKey);
+document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement) closeStage(); });
+addEventListener('resize', () => { fitList(); fitStage(); });
+new ResizeObserver(fitList).observe(document.querySelector('main'));
+
+fitList();
+if (frameIndex(location.hash.slice(1)) >= 0) frames[frameIndex(location.hash.slice(1))].scrollIntoView();
+</script>
+</body>
+</html>
